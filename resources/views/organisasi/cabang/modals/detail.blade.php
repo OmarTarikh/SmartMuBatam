@@ -1,7 +1,9 @@
 <!-- ========================================
      DETAIL MODAL
 ======================================== -->
-<div class="modal fade" id="detailModal" tabindex="-1">
+@foreach($cabangs as $cabang)
+
+<div class="modal fade" id="detailModal{{ $cabang->id }}" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -29,7 +31,7 @@
                     <label>ID Cabang</label>
 
                     <div class="modal-value">
-                        CBG-001
+                        {{ $cabang->id }}
                     </div>
 
                 </div>
@@ -39,7 +41,7 @@
                     <label>Nama Cabang</label>
 
                     <div class="modal-value">
-                        Cabang Batam Kota
+                        {{ $cabang->nama_cabang }}
                     </div>
 
                 </div>
@@ -48,9 +50,21 @@
 
                     <label>Status</label>
 
+                    @if($cabang->status == 'aktif')
                         <span class="status-badge status-active">
                             AKTIF
                         </span>
+
+                    @elseif($cabang->status == 'vakum')
+                        <span class="status-badge status-nonaktif">
+                            VAKUM
+                        </span>
+
+                    @else
+                        <span class="status-badge status-kurang">
+                            KURANG AKTIF
+                        </span>
+                    @endif
 
                 </div>
 
@@ -62,3 +76,4 @@
 
 </div>
 
+@endforeach

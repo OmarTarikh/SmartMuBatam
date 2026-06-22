@@ -1,7 +1,11 @@
 <!-- ========================================
      DELETE MODAL
 ======================================== -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
+@foreach($cabangs as $cabang)
+
+<div class="modal fade"
+     id="deleteModal{{ $cabang->id }}"
+     tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered modal-sm">
 
@@ -12,7 +16,8 @@
 
                 <div class="delete-icon mb-3">
 
-                    <iconify-icon icon="mdi:trash-can-outline"></iconify-icon>
+                    <iconify-icon icon="mdi:trash-can-outline">
+                    </iconify-icon>
 
                 </div>
 
@@ -21,26 +26,35 @@
                 </h5>
 
                 <p class="delete-text">
-                    Data cabang akan dihapus permanen
+                    {{ $cabang->nama_cabang }}
+                    akan dihapus permanen
                 </p>
 
-                <!-- BUTTON -->
-                <div class="d-flex justify-content-center gap-2 mt-4">
+                <form action="{{ route('cabang.destroy',$cabang->id) }}"
+                      method="POST">
 
-                    <button class="btn modal-cancel-btn"
-                            data-bs-dismiss="modal">
+                    @csrf
+                    @method('DELETE')
 
-                        Batal
+                    <div class="d-flex justify-content-center gap-2 mt-4">
 
-                    </button>
+                        <button class="btn modal-cancel-btn"
+                                data-bs-dismiss="modal"
+                                type="button">
 
-                    <button class="btn modal-delete-btn">
+                            Batal
 
-                        Hapus
+                        </button>
 
-                    </button>
+                        <button class="btn modal-delete-btn">
 
-                </div>
+                            Hapus
+
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
@@ -49,3 +63,5 @@
     </div>
 
 </div>
+
+@endforeach

@@ -18,9 +18,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
 </head>
 <body>
 
@@ -42,8 +40,51 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/js/app.js') }}"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#00BF63'
+        });
+        </script>
+
+        @endif
+
+
+        @if(session('success_update'))
+
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success_update') }}',
+            confirmButtonColor: '#00BF63'
+        });
+        </script>
+
+        @endif
+
+
+        @if(session('success_delete'))
+
+        <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success_delete') }}',
+            confirmButtonColor: '#FF4D4F'
+        });
+        </script>
+
+    @endif
 </body>
 </html>

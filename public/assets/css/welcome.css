@@ -1,0 +1,820 @@
+/* ========================================
+   GLOBAL
+======================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Sora',sans-serif;
+    overflow-x:hidden;
+    background:#F8F8F8;
+}
+
+/* ========================================
+   LANDING PAGE
+======================================== */
+
+.landing-page{
+    background:#F5F5F5;
+    min-height:100vh;
+}
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+.landing-navbar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    z-index:1000;
+
+    padding:20px 0;
+
+    transition:.3s;
+
+    background:rgba(0,153,79,.92);
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,.1);
+}
+
+.navbar-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 80px;
+}
+
+.navbar-logo{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    color:#fff;
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.navbar-logo:hover{
+    transform:translateY(-2px);
+}
+
+.navbar-logo iconify-icon{
+    font-size:42px;
+}
+
+.logo-text{
+    font-size:22px;
+    color:#fff;
+    letter-spacing:.20em;
+}
+
+.logo-text .normal-text{
+    letter-spacing:normal;
+}
+
+/* ========================================
+   MENU
+======================================== */
+
+.navbar-menu{
+    display:flex;
+    gap:55px;
+    align-items:center;
+}
+
+.navbar-menu a{
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:600;
+
+    transition:.25s ease;
+}
+
+.navbar-menu a:hover{
+    transform:translateY(-2px);
+}
+/* ========================================
+   USER
+======================================== */
+
+.user-btn{
+    border:none;
+    background:none;
+    transition:.3s;
+}
+
+.user-btn:hover{
+    transform:scale(1.08);
+}
+
+.user-btn iconify-icon{
+    font-size:46px;
+    color:#fff;
+}
+
+.user-dropdown{
+    border:none;
+    border-radius:16px;
+    padding:15px;
+    min-width:240px;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.user-dropdown .dropdown-item{
+    font-weight:400;
+    color:#000;
+    border-radius:8px;
+    transition:.25s;
+}
+
+.user-dropdown .dropdown-item:hover{
+    background:#00BF63;
+    color:#fff;
+}
+
+.user-dropdown small{
+    color:#ff0000;
+    font-size:11px;
+    display:block;
+    margin-top:8px;
+}
+
+/* ========================================
+   HERO SECTION
+======================================== */
+
+.hero-section{
+    position:relative;
+    background:#00994F;
+    overflow:hidden;
+}
+
+/* ========================================
+   HERO CONTENT
+======================================== */
+
+.hero-content{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    min-height:670px;
+
+    padding:
+        200px
+        100px
+        140px;
+}
+
+/* ========================================
+   HERO LEFT
+======================================== */
+
+.hero-left{
+    max-width:650px;
+    color:white;
+    position:relative;
+    margin-bottom: 100px;
+}
+
+.hero-left h1{
+    font-size:60px;
+    font-weight:700;
+    margin-bottom:20px;
+    text-align: center;
+    justify-content: center;
+}
+
+.hero-title{
+    display:flex;
+    align-items:center;
+}
+
+.smart-text{
+    color:#CAA027;
+    letter-spacing:.30em;
+}
+
+.mubatam-text{
+    color:#fff;
+}
+.hero-left p{
+    font-size:20px;
+    line-height:1.6;
+    max-width:700px;
+    text-align: center;
+    font-weight: 300;
+}
+
+/* ========================================
+   HERO RIGHT
+======================================== */
+
+.hero-right{
+    position:absolute;
+    right:150px;
+    bottom:120px;
+}
+
+.hero-right img{
+    width:350px;
+    max-width:none;
+    display:block;
+}
+
+/* ========================================
+   WAVE
+======================================== */
+
+.hero-wave{
+    position:absolute;
+    left:0;
+    bottom:-1px;
+    width:100%;
+    pointer-events:none;
+}
+
+/* ========================================
+   BERITA TERKINI BUBBLE
+======================================== */
+
+.news-title-bubble{
+    position:absolute;
+
+    top:-75px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#008746;
+
+    color:#fff;
+
+    font-size:22px;
+
+    font-weight:500;
+
+    padding:14px 32px;
+
+    border-radius:16px;
+
+    z-index:50;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.15);
+
+    transition:.3s;
+}
+
+.news-title-bubble:hover{
+    transform:
+        translateX(-50%)
+        translateY(-3px);
+
+    box-shadow:
+        0 15px 30px rgba(0,0,0,.2);
+}
+
+/* ========================================
+   NEWS SECTION
+======================================== */
+
+.news-section{
+    position:relative;
+    margin-top:-180px;
+
+    z-index:20;
+}
+
+.news-wrapper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+}
+
+/* CONTAINER CAROUSEL */
+.news-grid{
+    width:1140px;
+
+    display:flex;
+
+    gap:30px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    align-items:stretch;
+}
+
+/* CARD */
+.news-card{
+    flex:0 0 calc((1140px - 60px) / 3);
+
+    height:230px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    cursor:pointer;
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+
+    flex-shrink:0;
+}
+
+.news-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+
+    transition:.4s ease;
+}
+
+.news-card:hover img{
+    transform:scale(1.05);
+}
+
+/* ========================================
+   NEWS CARD
+======================================== */
+
+.news-card{
+    width:350px;
+    height:230px;
+    border-radius:18px;
+    overflow:hidden;
+    position:relative;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+.news-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.4s ease;
+}
+
+.news-card:hover img{
+    transform:scale(1.05);
+}
+
+/* ========================================
+   LABEL
+======================================== */
+
+.news-label{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+
+    color:white;
+    font-size:14px;
+    font-weight:600;
+
+    padding:8px 12px;
+    z-index:2;
+}
+
+.news-label.green{
+    background:rgba(0,133,69,.8);
+}
+
+.news-label.yellow{
+    background:rgba(187,150,0,.8);
+}
+
+.news-label.cyan{
+    background:rgba(22,137,151,.8);
+}
+
+/* ========================================
+   CAROUSEL BUTTON
+======================================== */
+
+.carousel-arrow{
+    width:44px;
+    height:44px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#00000034;
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    transition:.3s;
+}
+
+.carousel-arrow:hover{
+    background:#00BF63;
+    transform:scale(1.1);
+}
+
+.carousel-arrow iconify-icon{
+    font-size:24px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media(max-width:1200px){
+
+    .hero-left h1{
+        font-size:68px;
+    }
+
+    .hero-right img{
+        width:430px;
+    }
+}
+
+@media(max-width:992px){
+
+    .navbar-wrapper{
+        padding:0 25px;
+    }
+
+    .navbar-menu{
+        display:none;
+    }
+
+    .hero-content{
+        flex-direction:column;
+        text-align:center;
+        padding:150px 25px 180px;
+    }
+
+    .hero-right{
+        position:relative;
+        right:auto;
+        bottom:auto;
+        margin-top:40px;
+    }
+
+    .hero-right img{
+        width:320px;
+    }
+
+    .hero-left h1{
+        font-size:56px;
+    }
+
+    .hero-left p{
+        margin:auto;
+    }
+
+    .news-grid{
+        flex-direction:column;
+    }
+
+    .news-card{
+        width:100%;
+        max-width:420px;
+    }
+
+    .news-section{
+        margin-top:-60px;
+    }
+}
+
+@media(max-width:576px){
+
+    .hero-left h1{
+        font-size:42px;
+    }
+
+    .hero-left p{
+        font-size:16px;
+    }
+
+    .logo-text{
+        font-size:18px;
+    }
+
+    .navbar-logo iconify-icon{
+        font-size:34px;
+    }
+
+    .hero-right img{
+        width:260px;
+    }
+
+    .carousel-arrow{
+        display:none;
+    }
+}
+
+/*====================================
+ STRUKTUR
+=====================================*/
+
+.struktur-wrapper{
+    background:#00994F;
+}
+
+.struktur-section{
+    background:#F4F4F4;
+    position:relative;
+    text-align:center;
+
+    padding-top:150px;
+
+    padding-bottom:0;
+}
+
+/* TITLE */
+
+.struktur-title{
+    color:#00994F;
+    font-size:56px;
+    font-weight:700;
+    line-height:1.15;
+    margin-bottom:60px;
+}
+
+/* ===================================
+ SEGITIGA
+=================================== */
+
+.triangle-left{
+    position:absolute;
+    left:0;
+    top:0;
+    padding-top:100px;
+    width:220px;
+}
+
+.triangle-right{
+    position:absolute;
+    right:0;
+    top:0;
+    padding-top:100px;
+    width:220px;
+}
+
+
+/* ===================================
+ ROW
+=================================== */
+
+.ketua-row{
+    display:flex;
+    justify-content:center;
+    margin-bottom:55px;
+}
+
+.struktur-row{
+    display:flex;
+    justify-content:center;
+    gap:38px;
+    margin-bottom:38px;
+}
+
+
+/* ===================================
+ CARD
+=================================== */
+
+.struktur-card{
+    width:360px;
+    min-height:125px;
+
+    background:white;
+
+    border-radius:20px;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+
+    position:relative;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,.05);
+}
+
+.struktur-card::before{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:8px;
+
+    height:100%;
+
+    border-radius:0;
+}
+/* WARNA */
+
+.green::before{
+    background:#00BF63;
+}
+
+.blue::before{
+    background:#1D57BA;
+}
+
+.cyan::before{
+    background:#1A98A8;
+}
+
+.yellow::before{
+    background:#CAA027;
+}
+
+.orange::before{
+    background:#FF8D28;
+}
+
+.red::before{
+    background:#E74A3B;
+}
+
+
+/* ===================================
+ VECTOR
+=================================== */
+
+.struktur-card img{
+    width:105px;
+    height:105px;
+    object-fit:contain;
+    flex-shrink:0;
+}
+
+
+/* ===================================
+ TEXT
+=================================== */
+
+.card-content{
+    flex:1;
+    padding-right:18px;
+}
+
+.card-content h5{
+    font-size:17px;
+    font-weight:700;
+    line-height:1.25;
+    margin-bottom:8px;
+}
+
+.card-content p{
+    font-size:16px;
+    color:#555;
+    font-weight:600;
+    margin:0;
+}
+
+.line{
+    width:95%;
+    height:1px;
+    background:#d8d8d8;
+    margin-bottom:10px;
+}
+
+
+/* warna title */
+
+.green h5{
+    color:#00BF63;
+}
+
+.blue h5{
+    color:#1D57BA;
+}
+
+.cyan h5{
+    color:#1A98A8;
+}
+
+.yellow h5{
+    color:#CAA027;
+}
+
+.orange h5{
+    color:#FF8D28;
+}
+
+.red h5{
+    color:#E74A3B;
+}
+
+
+
+/*====================================
+ DESKRIPSI
+=====================================*/
+
+.deskripsi-wrapper{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:40px;
+
+    z-index:5;
+
+    transform:translateY(90px);
+}
+
+
+.desc-card{
+
+    width:350px;
+
+    min-height:100px;
+
+    background:white;
+
+    border-left:7px solid #00BF63;
+
+    border-radius:18px;
+
+    padding:24px;
+    padding-bottom:10px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+}
+
+
+.desc-card h4{
+
+    color:#00A857;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    line-height:1.25;
+
+    margin-bottom:15px;
+}
+
+.desc-card p{
+
+    color:#555;
+
+    font-size:14px;
+
+    line-height:1.6;
+}
+
+
+/*====================================
+ WAVE
+=====================================*/
+
+.struktur-wave{
+
+    position:relative;
+
+    width:100%;
+
+    display:block;
+
+    margin-top:-60px;
+
+    z-index:1;
+}

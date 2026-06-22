@@ -1,3 +1,6 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
 <!-- TOPBAR -->
 <nav class="topbar d-flex justify-content-between align-items-center px-4 py-3">
 
@@ -5,8 +8,9 @@
 
     <div class="dropdown user-section d-flex align-items-center gap-3">
 
-        <span style="color: #00000050;">ALESER TARIKH OMAR</span>
-
+        <span style="color: #00000050;">
+            {{ Auth::user()->name }}
+        </span>
         <!-- Trigger -->
         <button class="btn p-0 border-0 bg-transparent d-flex align-items-center"
                 data-bs-toggle="dropdown">
@@ -31,12 +35,24 @@
             <li><hr class="dropdown-divider"></li>
 
             <li>
-                <a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="{{ url('/login') }}">
-                    <iconify-icon icon="mdi:logout"></iconify-icon>
-                    Logout
-                </a>
-            </li>
 
+                <form action="{{ route('logout') }}" method="POST">
+
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="dropdown-item d-flex align-items-center gap-2 text-danger">
+
+                        <iconify-icon icon="mdi:logout"></iconify-icon>
+
+                        Logout
+
+                    </button>
+
+                </form>
+
+            </li>
         </ul>
 
     </div>

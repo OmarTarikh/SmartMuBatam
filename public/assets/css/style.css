@@ -1,3 +1,7 @@
+/* ========================================
+   LAYOUTS
+======================================== */
+
 body {
     font-family: 'Sora', sans-serif;
     background-color: #bdffde;
@@ -247,6 +251,46 @@ body {
 }
 
 /* ========================================
+   CARD LINK
+======================================== */
+
+.card-link {
+    display: block;
+
+    text-decoration: none;
+
+    color: inherit;
+}
+
+.card-link:hover {
+    color: inherit;
+
+    text-decoration: none;
+}
+
+/* ========================================
+   CLICKABLE CARD EFFECT
+======================================== */
+
+.card-link .stat-card {
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card-link:hover .stat-card {
+    transform: translateY(-3px);
+
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+.card-link:active .stat-card {
+    transform: translateY(-1px);
+}
+
+/* ========================================
    SECCOND SECTION
 ======================================== */
 
@@ -258,7 +302,13 @@ body {
     display: flex;
     flex-direction: column;
     border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,191,99,0.08);
 }
 
 .custom-header {

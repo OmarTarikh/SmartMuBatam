@@ -273,17 +273,23 @@
         <h1 class="auth-title">
             Masukan Akun
         </h1>
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
-        <form action="#" method="POST">
-
+        <form action="{{ route('login.process') }}" method="POST">
             @csrf
 
             <!-- EMAIL -->
             <div class="mb-3">
 
                 <input type="email"
-                       class="form-control custom-input"
-                       placeholder="Alamat Email...">
+                name="email"
+                class="form-control custom-input"
+                placeholder="Alamat Email..."
+                required>
 
             </div>
 
@@ -291,21 +297,26 @@
             <div class="mb-2 password-wrapper">
 
                 <input type="password"
-                       class="form-control custom-input"
-                       placeholder="Kata Sandi...">
+                    id="password"
+                    name="password"
+                    class="form-control custom-input"
+                    placeholder="Kata Sandi..."
+                    required>
 
-                <iconify-icon icon="mdi:eye-off-outline"
-                              class="password-icon">
+                <iconify-icon
+                    id="togglePassword"
+                    icon="mdi:eye-off-outline"
+                    class="password-icon">
                 </iconify-icon>
 
             </div>
-
             <!-- REMEMBER -->
             <div class="form-check remember-wrapper">
 
                 <input class="form-check-input"
-                       type="checkbox"
-                       id="remember">
+                    type="checkbox"
+                    id="remember"
+                    name="remember">
 
                 <label class="form-check-label"
                        for="remember">
@@ -317,30 +328,38 @@
             </div>
 
             <!-- BUTTON -->
-            <a href="{{ url('/dashboard') }}"
-            class="login-btn d-flex align-items-center justify-content-center text-decoration-none">
-
+            <button type="submit" class="login-btn d-flex align-items-center justify-content-center text-decoration-none">
                 Login
-
-            </a>
+            </button>
             <!-- LINE -->
             <div class="auth-line"></div>
 
-            <!-- LINK -->
-            <div class="auth-link">
-
-                <a href="{{ url('/register') }}">
-
-                    Belum Punya Akun? Daftar
-
-                </a>
-
-            </div>
 
         </form>
 
     </div>
 
+    <script>
+
+        const password = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+
+        togglePassword.addEventListener('click', function(){
+
+            if(password.type === 'password')
+            {
+                password.type = 'text';
+                togglePassword.setAttribute('icon', 'mdi:eye-outline');
+            }
+            else
+            {
+                password.type = 'password';
+                togglePassword.setAttribute('icon', 'mdi:eye-off-outline');
+            }
+
+        });
+
+    </script>
 </body>
 
 </html>

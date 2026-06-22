@@ -1,3 +1,52 @@
+// LANDING PAGE NEW CAROUSEL
+document.addEventListener('DOMContentLoaded', () => {
+
+    const carousel = document.getElementById('newsCarousel');
+
+    const nextBtn = document.getElementById('newsNext');
+
+    const prevBtn = document.getElementById('newsPrev');
+
+    let cards = document.querySelectorAll('.news-card');
+
+    const cardWidth = cards[0].offsetWidth + 30;
+
+    nextBtn.onclick = () => {
+
+        carousel.scrollBy({
+            left: cardWidth,
+            behavior:'smooth'
+        });
+
+        setTimeout(() => {
+
+            const firstCard = carousel.firstElementChild;
+
+            carousel.appendChild(firstCard);
+
+            carousel.scrollLeft -= cardWidth;
+
+        },400);
+
+    };
+
+    prevBtn.onclick = () => {
+
+        const lastCard = carousel.lastElementChild;
+
+        carousel.prepend(lastCard);
+
+        carousel.scrollLeft += cardWidth;
+
+        carousel.scrollBy({
+            left:-cardWidth,
+            behavior:'smooth'
+        });
+
+    };
+
+});
+
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('toggleSidebar');
 const toggleIcon = document.getElementById('toggleIcon');
