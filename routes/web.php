@@ -6,6 +6,7 @@ use App\Http\Controllers\CabangController;
 use App\Http\Controllers\RantingController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AumController;
+use App\Http\Controllers\MasjidController;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,16 +216,81 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:superadmin,masjid')->group(function () {
 
-        Route::get('/unit-lembaga/masjid', function () {
-            return view('unit-lembaga.masjid.index');
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX RANTING
+        |--------------------------------------------------------------------------
+        */
 
-        Route::get('/unit-lembaga/masjid/tambah', function () {
-            return view('unit-lembaga.masjid.tambah');
-        });
+        Route::get(
+            '/unit-lembaga/masjid/get-ranting/{id}',
+            [MasjidController::class, 'getRanting']
+        )->name('masjid.getRanting');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | INDEX
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/unit-lembaga/masjid',
+            [MasjidController::class, 'index']
+        )->name('masjid.index');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAMBAH
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/unit-lembaga/masjid/tambah',
+            [MasjidController::class, 'create']
+        )->name('masjid.create');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PDF
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/unit-lembaga/masjid/pdf',
+            [MasjidController::class, 'pdf']
+        )->name('masjid.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRUD
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/unit-lembaga/masjid',
+            [MasjidController::class, 'store']
+        )->name('masjid.store');
+
+        Route::get(
+            '/unit-lembaga/masjid/{id}/edit',
+            [MasjidController::class, 'edit']
+        )->name('masjid.edit');
+
+        Route::put(
+            '/unit-lembaga/masjid/{id}',
+            [MasjidController::class, 'update']
+        )->name('masjid.update');
+
+        Route::delete(
+            '/unit-lembaga/masjid/{id}',
+            [MasjidController::class, 'destroy']
+        )->name('masjid.destroy');
 
     });
-
 
     /*
     |--------------------------------------------------------------------------

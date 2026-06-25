@@ -1,86 +1,274 @@
-<div class="modal fade" id="editModal" tabindex="-1">
+{{-- ========================================
+     EDIT MODAL
+======================================== --}}
 
-    <div class="modal-dialog modal-dialog-centered">
+@foreach($masjids as $masjid)
+
+<div class="modal fade"
+     id="editModal{{ $masjid->id }}"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
 
         <div class="modal-content custom-modal">
 
+            <!-- HEADER -->
             <div class="modal-header custom-modal-header">
 
                 <h5 class="modal-title">
+
                     Edit Masjid
+
                 </h5>
 
-                <button type="button"
-                        class="btn-close shadow-none"
-                        data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn-close shadow-none"
+                    data-bs-dismiss="modal">
                 </button>
 
             </div>
 
-            <div class="modal-body">
+            <!-- FORM -->
+            <form
+                action="{{ route('masjid.update',$masjid->id) }}"
+                method="POST">
 
-                <div class="mb-3">
+                @csrf
+                @method('PUT')
 
-                    <label class="modal-label">
-                        Nama Masjid
-                    </label>
+                <div class="modal-body">
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Masjid Al-Ikhlas">
+                    <!-- NAMA -->
+                    <div class="mb-3">
 
-                </div>
+                        <label class="modal-label">
 
-                <div class="mb-3">
+                            Nama Masjid
 
-                    <label class="modal-label">
-                        Alamat
-                    </label>
+                        </label>
 
-                    <textarea rows="3"
-                              class="form-control custom-input">Baloi</textarea>
+                        <input
+                            type="text"
+                            name="nama_masjid"
+                            value="{{ $masjid->nama_masjid }}"
+                            class="form-control custom-input">
 
-                </div>
+                    </div>
 
-                <div class="mb-4">
+                    <!-- CABANG -->
+                    <div class="mb-3">
 
-                    <label class="modal-label">
-                        Status Legalitas
-                    </label>
+                        <label class="modal-label">
 
-                    <select class="form-select custom-input">
+                            Cabang
 
-                        <option>SERTIFIKAT</option>
+                        </label>
 
-                        <option>PROSES</option>
+                        <select
+                            name="cabang_id"
+                            class="form-select custom-input cabang-select"
+                            data-id="{{ $masjid->id }}"
+                            data-selected="{{ $masjid->ranting_id }}">
 
-                        <option>BELUM</option>
+                            @foreach($cabangs as $cabang)
 
-                    </select>
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ $masjid->ranting?->cabang_id == $cabang->id ? 'selected' : '' }}>
 
-                </div>
+                                    {{ $cabang->nama_cabang }}
 
-                <div class="d-flex justify-content-end gap-2">
+                                </option>
 
-                    <button class="btn modal-cancel-btn"
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- RANTING -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Ranting
+
+                        </label>
+
+                        <select
+                            id="ranting{{ $masjid->id }}"
+                            name="ranting_id"
+                            class="form-select custom-input">
+
+                            @foreach($rantings->where('cabang_id',$masjid->ranting?->cabang_id) as $ranting)
+
+                                <option
+                                    value="{{ $ranting->id }}"
+                                    {{ $ranting->id==$masjid->ranting_id?'selected':'' }}>
+
+                                    {{ $ranting->nama_ranting }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- ALAMAT -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Alamat
+
+                        </label>
+
+                        <textarea
+                            rows="3"
+                            name="alamat"
+                            class="form-control custom-input">{{ $masjid->alamat }}</textarea>
+
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="mb-4">
+
+                        <label class="modal-label">
+
+                            Status Legalitas
+
+                        </label>
+
+                        <select
+                            name="status_legalitas"
+                            class="form-select custom-input">
+
+                            <option
+                                value="sertifikat"
+                                {{ $masjid->status_legalitas=='sertifikat'?'selected':'' }}>
+
+                                SERTIFIKAT
+
+                            </option>
+
+                            <option
+                                value="proses"
+                                {{ $masjid->status_legalitas=='proses'?'selected':'' }}>
+
+                                PROSES
+
+                            </option>
+
+                            <option
+                                value="belum"
+                                {{ $masjid->status_legalitas=='belum'?'selected':'' }}>
+
+                                BELUM
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <button
+                            type="button"
+                            class="btn modal-cancel-btn"
                             data-bs-dismiss="modal">
 
-                        Batal
+                            Batal
 
-                    </button>
+                        </button>
 
-                    <button class="btn modal-save-btn">
+                        <button
+                            type="submit"
+                            class="btn modal-save-btn">
 
-                        Simpan
+                            Simpan
 
-                    </button>
+                        </button>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </form>
 
         </div>
 
     </div>
 
 </div>
+
+@endforeach
+
+
+@push('scripts')
+
+<script>
+
+document.addEventListener('DOMContentLoaded',function(){
+
+    document.querySelectorAll('.cabang-select').forEach(function(select){
+
+        const modalId=select.dataset.id;
+
+        const ranting=document.getElementById('ranting'+modalId);
+
+        function loadRanting(selected=null){
+
+            fetch('/unit-lembaga/masjid/get-ranting/'+select.value)
+
+            .then(res=>res.json())
+
+            .then(data=>{
+
+                ranting.innerHTML='';
+
+                data.forEach(function(item){
+
+                    ranting.innerHTML+=`
+                        <option value="${item.id}"
+                        ${selected==item.id?'selected':''}>
+                            ${item.nama_ranting}
+                        </option>
+                    `;
+
+                });
+
+            });
+
+        }
+
+        loadRanting(select.dataset.selected);
+
+        select.addEventListener('change',function(){
+
+            loadRanting();
+
+        });
+
+    });
+
+
+    document.querySelectorAll('.modal').forEach(function(modal){
+
+        modal.addEventListener('hidden.bs.modal',function(){
+
+            this.querySelector('form').reset();
+
+        });
+
+    });
+
+});
+
+</script>
+
+@endpush

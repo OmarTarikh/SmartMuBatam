@@ -20,7 +20,7 @@
         <!-- BODY -->
         <div class="form-card-body">
 
-            <form action="#" method="POST">
+            <form action="{{ route('masjid.store') }}" method="POST">
 
                 @csrf
 
@@ -33,9 +33,12 @@
                             Nama Masjid
                         </label>
 
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan nama masjid">
+                        <input
+                            type="text"
+                            name="nama_masjid"
+                            value="{{ old('nama_masjid') }}"
+                            class="form-control custom-input"
+                            placeholder="Masukkan nama masjid">
 
                     </div>
 
@@ -46,21 +49,26 @@
                             Status Legalitas
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="status_legalitas"
+                            class="form-select custom-input">
 
-                            <option selected disabled>
-                                Pilih status legalitas
+                            <option value="">
+                                Pilih Status Legalitas
                             </option>
 
-                            <option>
+                            <option value="sertifikat"
+                                {{ old('status_legalitas')=='sertifikat'?'selected':'' }}>
                                 SERTIFIKAT
                             </option>
 
-                            <option>
+                            <option value="proses"
+                                {{ old('status_legalitas')=='proses'?'selected':'' }}>
                                 PROSES
                             </option>
 
-                            <option>
+                            <option value="belum"
+                                {{ old('status_legalitas')=='belum'?'selected':'' }}>
                                 BELUM
                             </option>
 
@@ -75,19 +83,26 @@
                             Cabang
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            id="cabang"
+                            name="cabang_id"
+                            class="form-select custom-input">
 
-                            <option selected disabled>
-                                Pilih cabang
+                            <option value="">
+                                Pilih Cabang
                             </option>
 
-                            <option>
-                                Batam Kota
-                            </option>
+                            @foreach($cabangs as $cabang)
 
-                            <option>
-                                Sekupang
-                            </option>
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ old('cabang_id')==$cabang->id?'selected':'' }}>
+
+                                    {{ $cabang->nama_cabang }}
+
+                                </option>
+
+                            @endforeach
 
                         </select>
 
@@ -100,18 +115,13 @@
                             Ranting
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            id="ranting"
+                            name="ranting_id"
+                            class="form-select custom-input">
 
-                            <option selected disabled>
-                                Pilih ranting
-                            </option>
-
-                            <option>
-                                Tiban
-                            </option>
-
-                            <option>
-                                Tanjung Riau
+                            <option value="">
+                                Pilih Ranting
                             </option>
 
                         </select>
@@ -125,9 +135,11 @@
                             Alamat
                         </label>
 
-                        <textarea rows="4"
-                                  class="form-control custom-input"
-                                  placeholder="Masukkan alamat masjid"></textarea>
+                        <textarea
+                            rows="4"
+                            name="alamat"
+                            class="form-control custom-input"
+                            placeholder="Masukkan alamat masjid">{{ old('alamat') }}</textarea>
 
                     </div>
 
@@ -136,15 +148,17 @@
                 <!-- BUTTON -->
                 <div class="d-flex justify-content-end gap-3 mt-5">
 
-                    <a href="{{ url('/unit-lembaga/masjid') }}"
-                       class="btn back-btn">
+                    <a
+                        href="{{ route('masjid.index') }}"
+                        class="btn back-btn">
 
                         Kembali
 
                     </a>
 
-                    <button type="submit"
-                            class="btn save-btn">
+                    <button
+                        type="submit"
+                        class="btn save-btn">
 
                         Simpan Data
 
@@ -161,3 +175,48 @@
 </div>
 
 @endsection
+
+
+@push('scripts')
+
+<script>
+
+document.addEventListener('DOMContentLoaded',function(){
+
+    const cabang=document.getElementById('cabang');
+
+    const ranting=document.getElementById('ranting');
+
+    cabang.addEventListener('change',function(){
+
+        let id=this.value;
+
+        ranting.innerHTML='<option>Memuat...</option>';
+
+        fetch('/unit-lembaga/masjid/get-ranting/'+id)
+
+        .then(res=>res.json())
+
+        .then(data=>{
+
+            ranting.innerHTML='<option value="">Pilih Ranting</option>';
+
+            data.forEach(item=>{
+
+                ranting.innerHTML+=`
+                    <option value="${item.id}">
+                        ${item.nama_ranting}
+                    </option>
+                `;
+
+            });
+
+        });
+
+    });
+
+});
+
+</script>
+
+@endpush

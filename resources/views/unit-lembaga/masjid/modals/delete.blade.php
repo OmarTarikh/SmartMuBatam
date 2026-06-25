@@ -1,46 +1,87 @@
-<div class="modal fade" id="deleteModal" tabindex="-1">
+{{-- ========================================
+     DELETE MODAL
+======================================== --}}
+
+@foreach($masjids as $masjid)
+
+<div class="modal fade"
+     id="deleteModal{{ $masjid->id }}"
+     tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered modal-sm">
 
         <div class="modal-content custom-modal">
 
-            <div class="modal-body text-center p-4">
+            <form
+                action="{{ route('masjid.destroy',$masjid->id) }}"
+                method="POST">
 
-                <div class="delete-icon mb-3">
+                @csrf
+                @method('DELETE')
 
-                    <iconify-icon icon="mdi:trash-can-outline"></iconify-icon>
+                <div class="modal-body text-center p-4">
 
-                </div>
+                    <!-- ICON -->
+                    <div class="delete-icon mb-3">
 
-                <h5 class="delete-title">
-                    Hapus Data?
-                </h5>
+                        <iconify-icon
+                            icon="mdi:trash-can-outline">
+                        </iconify-icon>
 
-                <p class="delete-text">
-                    Data masjid akan dihapus permanen
-                </p>
+                    </div>
 
-                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <!-- TITLE -->
+                    <h5 class="delete-title">
 
-                    <button class="btn modal-cancel-btn"
+                        Hapus Data?
+
+                    </h5>
+
+                    <!-- TEXT -->
+                    <p class="delete-text">
+
+                        Data masjid
+
+                        <strong>
+
+                            "{{ $masjid->nama_masjid }}"
+
+                        </strong>
+
+                        akan dihapus permanen.
+
+                    </p>
+
+                    <!-- BUTTON -->
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+
+                        <button
+                            type="button"
+                            class="btn modal-cancel-btn"
                             data-bs-dismiss="modal">
 
-                        Batal
+                            Batal
 
-                    </button>
+                        </button>
 
-                    <button class="btn modal-delete-btn">
+                        <button
+                            type="submit"
+                            class="btn modal-delete-btn">
 
-                        Hapus
+                            Hapus
 
-                    </button>
+                        </button>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </form>
 
         </div>
 
     </div>
 
 </div>
+
+@endforeach
