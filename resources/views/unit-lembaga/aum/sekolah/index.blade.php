@@ -372,102 +372,102 @@
 
 </div>
 
-<!-- PAGINATION -->
-<div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-
-    <!-- INFO -->
-    <div class="table-info-text">
-
-        Menunjukan
-
-        {{ $aums->firstItem() ?? 0 }}
-
-        sampai
-
-        {{ $aums->lastItem() ?? 0 }}
-
-        dari
-
-        {{ $aums->total() }}
-
-        entri
-
-    </div>
-
     <!-- PAGINATION -->
-    <div class="custom-pagination d-flex align-items-center">
+    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
 
-        {{-- Sebelumnya --}}
-        @if ($aums->onFirstPage())
+        <!-- INFO -->
+        <div class="table-info-text">
 
-            <button class="page-btn page-prev" disabled>
+            Menunjukan
 
-                Sebelumnya
+            {{ $aums->firstItem() ?? 0 }}
 
-            </button>
+            sampai
 
-        @else
+            {{ $aums->lastItem() ?? 0 }}
 
-            <a
-                href="{{ $aums->previousPageUrl() }}"
-                class="page-btn page-prev">
+            dari
 
-                Sebelumnya
+            {{ $aums->total() }}
 
-            </a>
+            entri
 
-        @endif
+        </div>
 
-        @php
+        <!-- PAGINATION -->
+        <div class="custom-pagination d-flex align-items-center">
 
-            $start = max($aums->currentPage() - 2, 1);
+            {{-- Sebelumnya --}}
+            @if ($aums->onFirstPage())
 
-            $end = min($start + 4, $aums->lastPage());
+                <button class="page-btn page-prev" disabled>
 
-            if (($end - $start) < 4) {
+                    Sebelumnya
 
-                $start = max($end - 4, 1);
+                </button>
 
-            }
+            @else
 
-        @endphp
+                <a
+                    href="{{ $aums->previousPageUrl() }}"
+                    class="page-btn page-prev">
 
-        @for($page = $start; $page <= $end; $page++)
+                    Sebelumnya
 
-            <a
-                href="{{ $aums->url($page) }}"
-                class="page-btn {{ $page == $aums->currentPage() ? 'active' : '' }}">
+                </a>
 
-                {{ $page }}
+            @endif
 
-            </a>
+            @php
 
-        @endfor
+                $start = max($aums->currentPage() - 2, 1);
 
-        {{-- Berikutnya --}}
-        @if($aums->hasMorePages())
+                $end = min($start + 4, $aums->lastPage());
 
-            <a
-                href="{{ $aums->nextPageUrl() }}"
-                class="page-btn page-next">
+                if (($end - $start) < 4) {
 
-                Berikutnya
+                    $start = max($end - 4, 1);
 
-            </a>
+                }
 
-        @else
+            @endphp
 
-            <button class="page-btn page-next" disabled>
+            @for($page = $start; $page <= $end; $page++)
 
-                Berikutnya
+                <a
+                    href="{{ $aums->url($page) }}"
+                    class="page-btn {{ $page == $aums->currentPage() ? 'active' : '' }}">
 
-            </button>
+                    {{ $page }}
 
-        @endif
+                </a>
+
+            @endfor
+
+            {{-- Berikutnya --}}
+            @if($aums->hasMorePages())
+
+                <a
+                    href="{{ $aums->nextPageUrl() }}"
+                    class="page-btn page-next">
+
+                    Berikutnya
+
+                </a>
+
+            @else
+
+                <button class="page-btn page-next" disabled>
+
+                    Berikutnya
+
+                </button>
+
+            @endif
+
+        </div>
 
     </div>
-
-</div>
 
 </div>
 

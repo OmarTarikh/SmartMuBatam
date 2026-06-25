@@ -8,6 +8,7 @@
 
     <div class="form-card">
 
+        <!-- HEADER -->
         <div class="form-card-header">
 
             <h5>
@@ -16,6 +17,7 @@
 
         </div>
 
+        <!-- BODY -->
         <div class="form-card-body">
 
             <form action="{{ route('aum.store') }}" method="POST">
@@ -33,17 +35,22 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Nama Klinik
-
                         </label>
 
                         <input
                             type="text"
                             name="nama_aum"
                             value="{{ old('nama_aum') }}"
-                            class="form-control custom-input"
-                            placeholder="Masukkan nama klinik">
+                            class="form-control custom-input @error('nama_aum') is-invalid @enderror"
+                            placeholder="Masukkan nama klinik"
+                            required>
+
+                        @error('nama_aum')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -51,17 +58,21 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Kapasitas
-
                         </label>
 
                         <input
                             type="number"
                             name="kapasitas"
                             value="{{ old('kapasitas') }}"
-                            class="form-control custom-input"
+                            class="form-control custom-input @error('kapasitas') is-invalid @enderror"
                             placeholder="Masukkan kapasitas">
+
+                        @error('kapasitas')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -69,16 +80,20 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Jumlah Pasien
-
                         </label>
 
                         <input
                             type="number"
                             name="jumlah_pasien"
                             value="{{ old('jumlah_pasien') }}"
-                            class="form-control custom-input">
+                            class="form-control custom-input @error('jumlah_pasien') is-invalid @enderror">
+
+                        @error('jumlah_pasien')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -86,16 +101,20 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Jumlah Dokter
-
                         </label>
 
                         <input
                             type="number"
                             name="jumlah_dokter"
                             value="{{ old('jumlah_dokter') }}"
-                            class="form-control custom-input">
+                            class="form-control custom-input @error('jumlah_dokter') is-invalid @enderror">
+
+                        @error('jumlah_dokter')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -103,14 +122,12 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Tahun Berdiri
-
                         </label>
 
                         <select
                             name="tahun"
-                            class="form-select custom-input">
+                            class="form-select custom-input @error('tahun') is-invalid @enderror">
 
                             <option value="">
                                 Pilih Tahun
@@ -128,54 +145,58 @@
 
                             @endfor
 
-                        </select>                    
+                        </select>
+
+                        @error('tahun')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
 
                     <!-- STATUS -->
                     <div class="col-md-6">
 
                         <label class="custom-label">
-
                             Status Perizinan
-
                         </label>
 
                         <select
                             name="status_perizinan"
-                            class="form-select custom-input">
+                            class="form-select custom-input @error('status_perizinan') is-invalid @enderror"
+                            required>
 
                             <option value="">
-
                                 Pilih Status
-
                             </option>
 
                             <option value="aktif"
-                                {{ old('status_perizinan')=='aktif'?'selected':'' }}>
-
+                                {{ old('status_perizinan') == 'aktif' ? 'selected' : '' }}>
                                 AKTIF
-
                             </option>
 
                             <option value="tidak aktif"
-                                {{ old('status_perizinan')=='tidak_aktif'?'selected':'' }}>
-
+                                {{ old('status_perizinan') == 'tidak aktif' ? 'selected' : '' }}>
                                 TIDAK AKTIF
-
                             </option>
 
                             <option value="proses izin"
-                                {{ old('status_perizinan')=='proses_izin'?'selected':'' }}>
-
+                                {{ old('status_perizinan') == 'proses izin' ? 'selected' : '' }}>
                                 PROSES IZIN
-
                             </option>
 
                         </select>
 
+                        @error('status_perizinan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                     </div>
 
-                    <!-- CABANG -->
+                            <!-- CABANG -->
                     <div class="col-md-6">
 
                         <label class="custom-label">
@@ -187,19 +208,18 @@
                         <select
                             id="cabang"
                             name="cabang_id"
-                            class="form-select custom-input">
+                            class="form-select custom-input @error('cabang_id') is-invalid @enderror"
+                            required>
 
                             <option value="">
-
                                 Pilih Cabang
-
                             </option>
 
                             @foreach($cabangs as $cabang)
 
                                 <option
                                     value="{{ $cabang->id }}"
-                                    {{ old('cabang_id')==$cabang->id?'selected':'' }}>
+                                    {{ old('cabang_id') == $cabang->id ? 'selected' : '' }}>
 
                                     {{ $cabang->nama_cabang }}
 
@@ -208,6 +228,16 @@
                             @endforeach
 
                         </select>
+
+                        @error('cabang_id')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
@@ -223,15 +253,24 @@
                         <select
                             id="ranting"
                             name="ranting_id"
-                            class="form-select custom-input">
+                            class="form-select custom-input @error('ranting_id') is-invalid @enderror"
+                            required>
 
                             <option value="">
-
                                 Pilih Ranting
-
                             </option>
 
                         </select>
+
+                        @error('ranting_id')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
@@ -247,8 +286,19 @@
                         <textarea
                             rows="4"
                             name="alamat"
-                            class="form-control custom-input"
-                            placeholder="Masukkan alamat">{{ old('alamat') }}</textarea>
+                            class="form-control custom-input @error('alamat') is-invalid @enderror"
+                            placeholder="Masukkan alamat"
+                            required>{{ old('alamat') }}</textarea>
+
+                        @error('alamat')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
@@ -268,12 +318,13 @@
                         type="submit"
                         class="btn save-btn">
 
-                        Simpan 
+                        Simpan
+
+                    </button>
 
                 </div>
 
             </form>
-
         </div>
 
     </div>
@@ -281,8 +332,8 @@
 </div>
 
 @endsection
-
 @push('scripts')
+
 
 <script>
 
@@ -323,5 +374,6 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 </script>
+
 
 @endpush
