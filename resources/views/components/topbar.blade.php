@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 <!-- TOPBAR -->
 <nav class="topbar d-flex justify-content-between align-items-center px-4 py-3">
 
-    <h5 class="m-0 fw-semibold title-text">Judul > subjudul</h5>
+    <h5 class="m-0 fw-semibold title-text">@yield('title', 'Dashboard')</h5>
 
     <div class="dropdown user-section d-flex align-items-center gap-3">
 

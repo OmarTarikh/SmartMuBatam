@@ -34,6 +34,9 @@ class RantingSeeder extends Seeder
 
             ['cabang_id'=>8,'nama_ranting'=>'Mangsang','status'=>'AKTIF'],
             ['cabang_id'=>8,'nama_ranting'=>'Duriangkang','status'=>'AKTIF'],
+            
+            ['cabang_id'=>9,'nama_ranting'=>'Bengkong Laut','status'=>'AKTIF'],
+            ['cabang_id'=>9,'nama_ranting'=>'Bengkong Harapan','status'=>'AKTIF'],
 
         ];
 

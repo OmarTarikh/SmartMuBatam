@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Manajemen Unit Lembaga > Masjid')
+
 @section('content')
 
 <div class="container-fluid py-4">

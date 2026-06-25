@@ -4,6 +4,8 @@
 
 @extends('layouts.app')
 
+@section('title', 'Manajemen Organisasi > Anggota > Tambah')
+
 @section('content')
 
 <div class="container-fluid py-4">
@@ -22,7 +24,7 @@
         <!-- BODY -->
         <div class="form-card-body">
 
-            <form action="#" method="POST">
+            <form action="{{ route('anggota.store') }}" method="POST">
 
                 @csrf
 
@@ -35,9 +37,16 @@
                             NIK
                         </label>
 
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan NIK">
+                        <input
+                            type="text"
+                            name="nik"
+                            value="{{ old('nik') }}"
+                            class="form-control custom-input @error('nik') is-invalid @enderror"
+                            placeholder="Masukkan NIK">
+
+                        @error('nik')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
 
                     </div>
 
@@ -48,9 +57,16 @@
                             Nama Lengkap
                         </label>
 
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan nama">
+                        <input
+                            type="text"
+                            name="nama"
+                            value="{{ old('nama') }}"
+                            class="form-control custom-input @error('nama') is-invalid @enderror"
+                            placeholder="Masukkan nama">
+
+                        @error('nama')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
 
                     </div>
 
@@ -61,21 +77,29 @@
                             Jenis Kelamin
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="jenis_kelamin"
+                            class="form-select custom-input @error('jenis_kelamin') is-invalid @enderror">
 
-                            <option selected disabled>
+                            <option value="">
                                 Pilih jenis kelamin
                             </option>
 
-                            <option>
+                            <option value="L"
+                                {{ old('jenis_kelamin')=='L' ? 'selected' : '' }}>
                                 Laki-laki
                             </option>
 
-                            <option>
+                            <option value="P"
+                                {{ old('jenis_kelamin')=='P' ? 'selected' : '' }}>
                                 Perempuan
                             </option>
 
                         </select>
+
+                        @error('jenis_kelamin')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
 
                     </div>
 
@@ -86,11 +110,17 @@
                             Tanggal Lahir
                         </label>
 
-                        <input type="date"
-                               class="form-control custom-input">
+                        <input
+                            type="date"
+                            name="tanggal_lahir"
+                            value="{{ old('tanggal_lahir') }}"
+                            class="form-control custom-input @error('tanggal_lahir') is-invalid @enderror">
+
+                        @error('tanggal_lahir')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
 
                     </div>
-
                     <!-- ALAMAT -->
                     <div class="col-md-12">
 
@@ -98,9 +128,15 @@
                             Alamat
                         </label>
 
-                        <textarea class="form-control custom-input"
-                                  rows="4"
-                                  placeholder="Masukkan alamat"></textarea>
+                        <textarea
+                            name="alamat"
+                            rows="4"
+                            class="form-control custom-input @error('alamat') is-invalid @enderror"
+                            placeholder="Masukkan alamat">{{ old('alamat') }}</textarea>
+
+                        @error('alamat')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
 
                     </div>
 
@@ -111,25 +147,34 @@
                             Cabang
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="cabang_id"
+                            id="cabang"
+                            class="form-select custom-input @error('cabang_id') is-invalid @enderror">
 
-                            <option selected disabled>
+                            <option value="">
                                 Pilih cabang
                             </option>
 
-                            <option>
-                                Batam Kota
-                            </option>
+                            @foreach($cabangs as $cabang)
 
-                            <option>
-                                Sekupang
-                            </option>
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ old('cabang_id') == $cabang->id ? 'selected' : '' }}>
 
-                            <option>
-                                Nongsa
-                            </option>
+                                    {{ $cabang->nama_cabang }}
+
+                                </option>
+
+                            @endforeach
 
                         </select>
+
+                        @error('cabang_id')
+                            <small class="text-danger">
+                                {{ $message }}
+                            </small>
+                        @enderror
 
                     </div>
 
@@ -140,25 +185,22 @@
                             Ranting
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="ranting_id"
+                            id="ranting"
+                            class="form-select custom-input @error('ranting_id') is-invalid @enderror">
 
-                            <option selected disabled>
+                            <option value="">
                                 Pilih ranting
                             </option>
 
-                            <option>
-                                Tanjung Riau
-                            </option>
-
-                            <option>
-                                Tiban
-                            </option>
-
-                            <option>
-                                Patam Lestari
-                            </option>
-
                         </select>
+
+                        @error('ranting_id')
+                            <small class="text-danger">
+                                {{ $message }}
+                            </small>
+                        @enderror
 
                     </div>
 
@@ -169,10 +211,16 @@
                             Pekerjaan
                         </label>
 
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan pekerjaan">
+                        <input
+                            type="text"
+                            name="pekerjaan"
+                            value="{{ old('pekerjaan') }}"
+                            class="form-control custom-input @error('pekerjaan') is-invalid @enderror"
+                            placeholder="Masukkan pekerjaan">
 
+                        @error('pekerjaan')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     <!-- PENDIDIKAN -->
@@ -182,19 +230,24 @@
                             Pendidikan
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="pendidikan"
+                            class="form-select custom-input @error('pendidikan') is-invalid @enderror">
 
-                            <option selected disabled>
+                            <option value="">
                                 Pilih pendidikan
                             </option>
 
-                            <option>SMA</option>
-                            <option>D3</option>
-                            <option>S1</option>
-                            <option>S2</option>
+                            <option value="SMA" {{ old('pendidikan')=='SMA' ? 'selected' : '' }}>SMA</option>
+                            <option value="D3" {{ old('pendidikan')=='D3' ? 'selected' : '' }}>D3</option>
+                            <option value="S1" {{ old('pendidikan')=='S1' ? 'selected' : '' }}>S1</option>
+                            <option value="S2" {{ old('pendidikan')=='S2' ? 'selected' : '' }}>S2</option>
 
                         </select>
 
+                        @error('pendidikan')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     <!-- STATUS -->
@@ -204,20 +257,31 @@
                             Status
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="status"
+                            class="form-select custom-input @error('status') is-invalid @enderror">
 
-                            <option selected disabled>
+                            <option value="">
                                 Pilih status
                             </option>
 
-                            <option>AKTIF</option>
+                            <option value="AKTIF" {{ old('status')=='AKTIF' ? 'selected' : '' }}>
+                                AKTIF
+                            </option>
 
-                            <option>NONAKTIF</option>
+                            <option value="VAKUM" {{ old('status')=='VAKUM' ? 'selected' : '' }}>
+                                VAKUM
+                            </option>
 
-                            <option>KURANG AKTIF</option>
+                            <option value="KURANG AKTIF" {{ old('status')=='KURANG AKTIF' ? 'selected' : '' }}>
+                                KURANG AKTIF
+                            </option>
 
                         </select>
 
+                        @error('status')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                 </div>
@@ -249,4 +313,52 @@
 
 </div>
 
+@push('scripts')
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const cabang = document.getElementById('cabang');
+    const ranting = document.getElementById('ranting');
+
+    cabang.addEventListener('change', function () {
+
+        let id = this.value;
+
+        ranting.innerHTML = '<option value="">Memuat...</option>';
+
+        fetch('/organisasi/anggota/get-ranting/' + id)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                ranting.innerHTML =
+                    '<option value="">Pilih ranting</option>';
+
+                data.forEach(item => {
+
+                    ranting.innerHTML +=
+                        `<option value="${item.id}">
+                            ${item.nama_ranting}
+                        </option>`;
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+            });
+
+    });
+
+});
+
+</script>
+
+@endpush
 @endsection

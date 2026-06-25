@@ -1,32 +1,61 @@
 @extends('layouts.app')
+@section('title', 'Manajemen Organisasi > Ranting')
 
 @section('content')
 
 <div class="container-fluid py-4">
 
+
     <!-- FILTER & ACTION -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4 mb-3">
 
         <!-- LEFT -->
         <div class="d-flex flex-column gap-3">
 
-            <!-- SORT -->
-            <div class="d-flex align-items-center gap-2">
+        <!-- FILTER -->
+        <div class="d-flex align-items-center gap-2">
+
+
+            <form method="GET" class="d-flex align-items-center gap-2">
 
                 <label class="filter-label m-0">
                     Urut berdasarkan
                 </label>
 
-                <select class="form-select custom-select">
+                <select
+                    name="filter"
+                    class="form-select custom-select"
+                    onchange="this.form.submit()">
 
-                    <option>terbaru</option>
-                    <option>terlama</option>
-                    <option>aktif</option>
-                    <option>nonaktif</option>
+                    <option value="terbaru"
+                        {{ request('filter')=='terbaru' ? 'selected' : '' }}>
+                        terbaru
+                    </option>
+
+                    <option value="terlama"
+                        {{ request('filter')=='terlama' ? 'selected' : '' }}>
+                        terlama
+                    </option>
+
+                    <option value="AKTIF"
+                        {{ request('filter')=='AKTIF' ? 'selected' : '' }}>
+                        aktif
+                    </option>
+
+                    <option value="VAKUM"
+                        {{ request('filter')=='VAKUM' ? 'selected' : '' }}>
+                        vakum
+                    </option>
+
+                    <option value="KURANG AKTIF"
+                        {{ request('filter')=='KURANG AKTIF' ? 'selected' : '' }}>
+                        kurang aktif
+                    </option>
 
                 </select>
+            </form>
 
-            </div>
+        </div>
 
         </div>
 
@@ -34,7 +63,7 @@
         <div class="d-flex align-items-center gap-3 flex-wrap">
 
             <!-- ADD -->
-            <a href="{{ url('organisasi/ranting/tambah') }}"
+            <a href="{{ route('ranting.create') }}"
                class="btn custom-btn-add d-flex align-items-center gap-2">
 
                 <iconify-icon icon="mdi:plus" width="20"></iconify-icon>
@@ -44,74 +73,80 @@
             </a>
 
             <!-- PDF -->
-            <button class="btn custom-btn-pdf d-flex align-items-center gap-2">
+            <a href="{{ route('ranting.pdf') }}"
+                target="_blank"
+                class="btn custom-btn-pdf d-flex align-items-center gap-2">
 
                 <iconify-icon icon="mdi:file-pdf-box" width="18"></iconify-icon>
 
                 <span>CETAK PDF</span>
 
-            </button>
+            </a>
 
         </div>
 
     </div>
 
     <!-- FILTER CABANG & SEARCH -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-
+    <div class="d-flex align-items-start justify-content-between gap-4 mb-3">
         <!-- FILTER CABANG -->
-        <div class="cabang-filter d-flex flex-wrap">
+        <div class="cabang-filter d-flex flex-nowrap">
+            <a
+                href="{{ route('ranting.index') }}"
+                class="cabang-filter-btn {{ request('cabang')==null ? 'active' : '' }}">
 
-            <button class="cabang-filter-btn active">
-                Batam Kota
-            </button>
+                Semua
 
-            <button class="cabang-filter-btn">
-                Sekupang
-            </button>
+            </a>
 
-            <button class="cabang-filter-btn">
-                Batu Aji
-            </button>
+            @foreach($cabangs as $cabang)
 
-            <button class="cabang-filter-btn">
-                Nongsa
-            </button>
+                <a
+                    href="{{ route('ranting.index',[
+                        'cabang'=>$cabang->id,
+                        'filter'=>request('filter'),
+                        'search'=>request('search')
+                    ]) }}"
 
-            <button class="cabang-filter-btn">
-                Sagulung
-            </button>
+                    class="cabang-filter-btn
+                    {{ request('cabang')==$cabang->id ? 'active' : '' }}">
 
-            <button class="cabang-filter-btn">
-                Batu Ampar
-            </button>
+                    {{ $cabang->nama_cabang }}
 
-            <button class="cabang-filter-btn">
-                Lubuk Baja
-            </button>
+                </a>
 
-            <button class="cabang-filter-btn">
-                Sei Beduk
-            </button>
-
-            <button class="cabang-filter-btn">
-                Bengkong
-            </button>
+            @endforeach
 
         </div>
-
+        
+    
         <!-- SEARCH -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex justify-content-end mb-3">
 
-            <span class="search-label">
-                Cari data :
-            </span>
+            <form
+                method="GET"
+                id="searchForm"
+                class="d-flex align-items-center gap-2">
 
-            <input type="text"
-                class="form-control custom-search">
+                <input
+                    type="hidden"
+                    name="filter"
+                    value="{{ request('filter') }}">
 
+                <span class="search-label">
+                    Cari data :
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    name="search"
+                    value="{{ request('search') }}"
+                    class="form-control custom-search"
+                    placeholder="Cari...">
+
+            </form>
         </div>
-
     </div>
     
     <!-- TABLE -->
@@ -145,28 +180,27 @@
                 <!-- BODY -->
                 <tbody>
 
-                    @for ($i = 1; $i <= 10; $i++)
-
+                    @forelse ($rantings as $ranting)
                     <tr>
 
-                        <td>{{ $i }}</td>
+                        <td>{{ $loop->iteration }}</td>
 
-                        <td>RTG-00{{ $i }}</td>
+                        <td>{{ $ranting->id }}</td>
 
-                        <td>Table item</td>
+                        <td>{{ $ranting->nama_ranting }}</td>
 
                         <td>
 
-                            @if($i % 3 == 1)
+                            @if(strtoupper($ranting->status) == 'AKTIF')
 
                                 <span class="status-badge status-active">
                                     AKTIF
                                 </span>
 
-                            @elseif($i % 3 == 2)
+                            @elseif(strtoupper($ranting->status) == 'VAKUM')
 
                                 <span class="status-badge status-nonaktif">
-                                    NONAKTIF
+                                    VAKUM
                                 </span>
 
                             @else
@@ -178,7 +212,6 @@
                             @endif
 
                         </td>
-
                         <!-- OPSI -->
                         <td>
 
@@ -187,7 +220,7 @@
                                 <!-- DETAIL -->
                                 <button class="action-btn btn-detail"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#detailModal">
+                                        data-bs-target="#detailModal{{ $ranting->id }}">
 
                                     <iconify-icon icon="mdi:eye"></iconify-icon>
 
@@ -196,7 +229,7 @@
                                 <!-- EDIT -->
                                 <button class="action-btn btn-edit"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#editModal">
+                                        data-bs-target="#editModal{{ $ranting->id }}">
 
                                     <iconify-icon icon="mdi:pencil"></iconify-icon>
 
@@ -205,7 +238,7 @@
                                 <!-- DELETE -->
                                 <button class="action-btn btn-delete"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal">
+                                        data-bs-target="#deleteModal{{ $ranting->id }}">
 
                                     <iconify-icon icon="mdi:trash-can"></iconify-icon>
 
@@ -217,15 +250,20 @@
 
                         <!-- CABANG -->
                         <td>
-
-                            PCB-00{{ $i }}
-
+                            {{ $ranting->cabang->nama_cabang }}
                         </td>
 
                     </tr>
 
-                    @endfor
+                    @empty
 
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            Tidak ada data ranting
+                        </td>
+                    </tr>
+
+                    @endforelse
                 </tbody>
 
             </table>
@@ -234,36 +272,119 @@
 
     </div>
 
-    <!-- FOOTER -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
+    <!-- PAGINATION -->
+    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
 
         <!-- INFO -->
         <div class="table-info-text">
 
-            Menunjukan 1 sampai 10 dari 10 entri
+            Menunjukan
+
+            {{ $rantings->firstItem() ?? 0 }}
+
+            sampai
+
+            {{ $rantings->lastItem() ?? 0 }}
+
+            dari
+
+            {{ $rantings->total() }}
+
+            entri
 
         </div>
 
-        <!-- PAGINATION -->
+        <!-- CUSTOM PAGINATION -->
         <div class="custom-pagination d-flex align-items-center">
 
-            <button class="page-btn page-prev">
-                Sebelumnya
-            </button>
+            {{-- Sebelumnya --}}
+            @if ($rantings->onFirstPage())
 
-            <button class="page-btn page-number active">
-                1
-            </button>
+                <button class="page-btn page-prev" disabled>
+                    Sebelumnya
+                </button>
 
-            <button class="page-btn page-next">
-                Berikutnya
-            </button>
+            @else
+
+                <a
+                    href="{{ $rantings->previousPageUrl() }}"
+                    class="page-btn page-prev">
+
+                    Sebelumnya
+
+                </a>
+
+            @endif
+
+
+            {{-- Nomor halaman --}}
+            @php
+                $start = max($rantings->currentPage() - 2, 1);
+                $end = min($start + 4, $rantings->lastPage());
+
+                if (($end - $start) < 4) {
+                    $start = max($end - 4, 1);
+                }
+            @endphp
+
+            @for ($page = $start; $page <= $end; $page++)
+
+                <a
+                    href="{{ $rantings->url($page) }}"
+                    class="page-btn {{ $page == $rantings->currentPage() ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+            @endfor
+
+            {{-- Berikutnya --}}
+            @if ($rantings->hasMorePages())
+
+                <a
+                    href="{{ $rantings->nextPageUrl() }}"
+                    class="page-btn page-next">
+
+                    Berikutnya
+
+                </a>
+
+            @else
+
+                <button class="page-btn page-next" disabled>
+                    Berikutnya
+                </button>
+
+            @endif
 
         </div>
 
     </div>
 
 </div>
+
+@push('scripts')
+
+<script>
+
+let timer;
+
+document.getElementById('searchInput').addEventListener('input', function () {
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+
+        document.getElementById('searchForm').submit();
+
+    }, 500);
+
+});
+
+</script>
+
+@endpush
 
 @endsection
 

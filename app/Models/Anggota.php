@@ -26,7 +26,7 @@ class Anggota extends Model
         'ranting_id',
         'pekerjaan',
         'pendidikan',
-        'status_keanggotaan'
+        'status'
     ];
 
     public function cabang()

@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CabangController;
+use App\Http\Controllers\RantingController;
+use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\AumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,33 +84,38 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | RANTING + CABANG + SUPERADMIN
+    | RANTING + CABANG + SUPERADMIN + ANGGOTA
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:superadmin,cabang,ranting')->group(function () {
 
-        Route::get('/organisasi/ranting', function () {
-            return view('organisasi.ranting.index');
-        })->name('ranting.index');
+        Route::get(
+            '/organisasi/anggota/get-ranting/{id}',
+            [AnggotaController::class, 'getRanting']
+        )->name('anggota.getRanting');
 
-        Route::view(
-            '/organisasi/ranting/tambah',
-            'organisasi.ranting.tambah'
-        );
+        Route::resource(
+            'organisasi/ranting',
+            RantingController::class
+        )->except('show');
 
-        Route::get('/organisasi/anggota', function () {
-            return view('organisasi.anggota.index');
-        })->name('anggota.index');
+        Route::get(
+            '/organisasi/ranting/pdf',
+            [RantingController::class,'pdf']
+        )->name('ranting.pdf');
 
-        Route::view(
-            '/organisasi/anggota/tambah',
-            'organisasi.anggota.tambah'
-        );
-
+        Route::get(
+            '/organisasi/anggota/pdf',
+            [AnggotaController::class,'pdf']
+        )->name('anggota.pdf');
+    
+        Route::resource(
+            'organisasi/anggota',
+            AnggotaController::class
+        )->except('show');
+        
     });
-
-
     /*
     |--------------------------------------------------------------------------
     | AUM
@@ -116,25 +124,89 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:superadmin,aum')->group(function () {
 
-        Route::get('/unit-lembaga/aum/sekolah', function () {
-            return view('unit-lembaga.aum.sekolah.index');
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX RANTING
+        |--------------------------------------------------------------------------
+        */
 
-        Route::get('/unit-lembaga/aum/sekolah/tambah', function () {
-            return view('unit-lembaga.aum.sekolah.tambah');
-        });
+        Route::get(
+            '/unit-lembaga/aum/get-ranting/{id}',
+            [AumController::class, 'getRanting']
+        )->name('aum.getRanting');
 
-        Route::get('/unit-lembaga/aum/klinik', function () {
-            return view('unit-lembaga.aum.klinik.index');
-        });
 
-        Route::get('/unit-lembaga/aum/klinik/tambah', function () {
-            return view('unit-lembaga.aum.klinik.tambah');
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | SEKOLAH
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/unit-lembaga/aum/sekolah',
+            [AumController::class, 'sekolah']
+        )->name('aum.sekolah');
+
+        Route::get(
+            '/unit-lembaga/aum/sekolah/tambah',
+            [AumController::class, 'createSekolah']
+        )->name('aum.sekolah.tambah');
+
+        Route::get(
+            '/unit-lembaga/aum/sekolah/pdf',
+            [AumController::class, 'pdfSekolah']
+        )->name('aum.sekolah.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | KLINIK
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            '/unit-lembaga/aum/klinik',
+            [AumController::class, 'klinik']
+        )->name('aum.klinik');
+
+        Route::get(
+            '/unit-lembaga/aum/klinik/tambah',
+            [AumController::class, 'createKlinik']
+        )->name('aum.klinik.tambah');
+
+        Route::get(
+            '/unit-lembaga/aum/klinik/pdf',
+            [AumController::class, 'pdfKlinik']
+        )->name('aum.klinik.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRUD (DIGUNAKAN BERSAMA)
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            '/unit-lembaga/aum',
+            [AumController::class, 'store']
+        )->name('aum.store');
+
+        Route::get(
+            '/unit-lembaga/aum/{id}/edit',
+            [AumController::class, 'edit']
+        )->name('aum.edit');
+
+        Route::put(
+            '/unit-lembaga/aum/{id}',
+            [AumController::class, 'update']
+        )->name('aum.update');
+
+        Route::delete(
+            '/unit-lembaga/aum/{id}',
+            [AumController::class, 'destroy']
+        )->name('aum.destroy');
 
     });
-
-
     /*
     |--------------------------------------------------------------------------
     | MASJID

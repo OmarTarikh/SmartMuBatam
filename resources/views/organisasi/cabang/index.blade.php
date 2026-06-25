@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Manajemen Organisasi > Cabang')
+
 @section('content')
 
 <div class="container-fluid py-4">
@@ -83,7 +85,15 @@
 <!-- SEARCH -->
 <div class="d-flex justify-content-end mb-3">
 
-    <form method="GET" class="d-flex align-items-center gap-2">
+    <form
+        method="GET"
+        id="searchForm"
+        class="d-flex align-items-center gap-2">
+
+        <input
+            type="hidden"
+            name="filter"
+            value="{{ request('filter') }}">
 
         <span class="search-label">
             Cari data :
@@ -91,6 +101,7 @@
 
         <input
             type="text"
+            id="searchInput"
             name="search"
             value="{{ request('search') }}"
             class="form-control custom-search"
@@ -226,36 +237,120 @@
 
 </div>
 
-<!-- FOOTER TABLE -->
-<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-3">
-
-    <!-- INFO -->
-    <div class="table-info-text">
-
-        Menampilkan
-
-        {{ $cabangs->count() }}
-
-        dari
-
-        {{ $cabangs->total() }}
-
-        data
-
-    </div>
-
     <!-- PAGINATION -->
-    <div>
+    <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
 
-        {{ $cabangs->links() }}
+        <!-- INFO -->
+        <div class="table-info-text">
+
+            Menunjukan
+
+            {{ $cabangs->firstItem() ?? 0 }}
+
+            sampai
+
+            {{ $cabangs->lastItem() ?? 0 }}
+
+            dari
+
+            {{ $cabangs->total() }}
+
+            entri
+
+        </div>
+
+        <!-- CUSTOM PAGINATION -->
+        <div class="custom-pagination d-flex align-items-center">
+
+            {{-- Sebelumnya --}}
+            @if ($cabangs->onFirstPage())
+
+                <button class="page-btn page-prev" disabled>
+                    Sebelumnya
+                </button>
+
+            @else
+
+                <a
+                    href="{{ $cabangs->previousPageUrl() }}"
+                    class="page-btn page-prev">
+
+                    Sebelumnya
+
+                </a>
+
+            @endif
+
+
+            {{-- Nomor halaman --}}
+            @php
+                $start = max($cabangs->currentPage() - 2, 1);
+                $end = min($start + 4, $cabangs->lastPage());
+
+                if (($end - $start) < 4) {
+                    $start = max($end - 4, 1);
+                }
+            @endphp
+
+            @for ($page = $start; $page <= $end; $page++)
+
+                <a
+                    href="{{ $cabangs->url($page) }}"
+                    class="page-btn {{ $page == $cabangs->currentPage() ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+            @endfor
+
+            {{-- Berikutnya --}}
+            @if ($cabangs->hasMorePages())
+
+                <a
+                    href="{{ $cabangs->nextPageUrl() }}"
+                    class="page-btn page-next">
+
+                    Berikutnya
+
+                </a>
+
+            @else
+
+                <button class="page-btn page-next" disabled>
+                    Berikutnya
+                </button>
+
+            @endif
+
+        </div>
 
     </div>
 
-</div>
-
 
 </div>
 
+@push('scripts')
+
+<script>
+
+let timer;
+
+document.getElementById('searchInput').addEventListener('input', function () {
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+
+        document.getElementById('searchForm').submit();
+
+    }, 500);
+
+});
+
+</script>
+
+@endpush
 @endsection
 
 @include('organisasi.cabang.modals.detail')

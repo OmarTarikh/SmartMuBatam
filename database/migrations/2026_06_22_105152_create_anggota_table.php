@@ -32,7 +32,11 @@ return new class extends Migration
 
             $table->string('pendidikan',100)->nullable();
 
-            $table->string('status_keanggotaan',50)->nullable();
+            $table->enum('status',[
+                'aktif',
+                'kurang aktif',
+                'vakum'
+            ])->default('aktif');
 
         });
     }

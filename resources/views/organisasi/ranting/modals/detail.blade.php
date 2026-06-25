@@ -1,7 +1,9 @@
 <!-- ========================================
      DETAIL MODAL
 ======================================== -->
-<div class="modal fade" id="detailModal" tabindex="-1">
+@foreach ($rantings as $ranting)
+
+<div class="modal fade" id="detailModal{{ $ranting->id }}" tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -24,47 +26,120 @@
             <!-- BODY -->
             <div class="modal-body">
 
-                <!-- ID RANTING -->
                 <div class="modal-field">
 
                     <label>ID Ranting</label>
 
                     <div class="modal-value">
-                        RTG-001
+                        {{ $ranting->id }}
                     </div>
 
                 </div>
 
-                <!-- NAMA RANTING -->
                 <div class="modal-field">
 
                     <label>Nama Ranting</label>
 
                     <div class="modal-value">
-                        Ranting Batam Center
+                        {{ $ranting->nama_ranting }}
                     </div>
 
                 </div>
 
-                <!-- CABANG -->
                 <div class="modal-field">
 
                     <label>Cabang</label>
 
                     <div class="modal-value">
-                        Batam Kota
+                        {{ $ranting->cabang->nama_cabang }}
                     </div>
 
                 </div>
 
-                <!-- STATUS -->
                 <div class="modal-field">
 
                     <label>Status</label>
 
-                    <span class="status-badge status-active">
-                        AKTIF
-                    </span>
+                            @if(strtoupper($ranting->status) == 'AKTIF')
+
+                                <span class="status-badge status-active">
+                                    AKTIF
+                                </span>
+
+                            @elseif(strtoupper($ranting->status) == 'VAKUM')
+
+                                <span class="status-badge status-nonaktif">
+                                    VAKUM
+                                </span>
+
+                            @else
+
+                                <span class="status-badge status-kurang">
+                                    KURANG AKTIF
+                                </span>
+
+                            @endif
+
+                </div>
+                <hr class="my-4">
+
+                <h6 class="fw-semibold mb-3">
+                    Statistik Anggota
+                </h6>
+
+                <div class="table-responsive">
+
+                    <table class="table table-sm custom-table align-middle mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Total</th>
+
+                                <th>Aktif</th>
+
+                                <th>Vakum</th>
+
+                                <th>Kurang Aktif</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+
+                                    {{ $ranting->anggota_count }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ $ranting->anggota_aktif_count }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ $ranting->anggota_vakum_count }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ $ranting->anggota_kurang_count }}
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
 
                 </div>
 
@@ -75,3 +150,5 @@
     </div>
 
 </div>
+
+@endforeach

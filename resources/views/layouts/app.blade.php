@@ -18,6 +18,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     
 </head>
 <body>
@@ -43,7 +45,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if(session('success'))
@@ -52,7 +53,7 @@
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: '{{ session('success') }}',
+            text: '{{ session("success") }}',
             confirmButtonColor: '#00BF63'
         });
         </script>
@@ -66,7 +67,7 @@
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: '{{ session('success_update') }}',
+            text: '{{ session("success_update") }}',
             confirmButtonColor: '#00BF63'
         });
         </script>
@@ -80,11 +81,13 @@
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
-            text: '{{ session('success_delete') }}',
+            text: '{{ session("success_delete") }}',
             confirmButtonColor: '#FF4D4F'
         });
         </script>
 
     @endif
+    
+    @stack('scripts')
 </body>
 </html>

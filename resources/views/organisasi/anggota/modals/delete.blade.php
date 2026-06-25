@@ -2,7 +2,11 @@
      resources/views/organisasi/anggota/modals/delete.blade.php
 ======================================== --}}
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
+@foreach($anggotas as $anggota)
+
+<div class="modal fade"
+     id="deleteModal{{ $anggota->nik }}"
+     tabindex="-1">
 
     <div class="modal-dialog modal-dialog-centered modal-sm">
 
@@ -17,29 +21,57 @@
                 </div>
 
                 <h5 class="delete-title">
+
                     Hapus Data?
+
                 </h5>
 
                 <p class="delete-text">
-                    Data anggota akan dihapus permanen
+
+                    Yakin ingin menghapus anggota
+
+                    <br>
+
+                    <strong>
+
+                        {{ $anggota->nama }}
+
+                    </strong>
+
+                    ?
+
                 </p>
 
-                <div class="d-flex justify-content-center gap-2 mt-4">
+                <form
+                    action="{{ route('anggota.destroy',$anggota->nik) }}"
+                    method="POST">
 
-                    <button class="btn modal-cancel-btn"
+                    @csrf
+
+                    @method('DELETE')
+
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+
+                        <button
+                            type="button"
+                            class="btn modal-cancel-btn"
                             data-bs-dismiss="modal">
 
-                        Batal
+                            Batal
 
-                    </button>
+                        </button>
 
-                    <button class="btn modal-delete-btn">
+                        <button
+                            type="submit"
+                            class="btn modal-delete-btn">
 
-                        Hapus
+                            Hapus
 
-                    </button>
+                        </button>
 
-                </div>
+                    </div>
+
+                </form>
 
             </div>
 
@@ -48,3 +80,5 @@
     </div>
 
 </div>
+
+@endforeach

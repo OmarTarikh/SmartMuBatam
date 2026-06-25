@@ -15,11 +15,10 @@ class Cabang extends Model
         'status'
     ];
 
-    public function ranting()
+    public function rantings()
     {
         return $this->hasMany(Ranting::class);
     }
-
     public function anggota()
     {
         return $this->hasMany(Anggota::class);

@@ -3,22 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cabang;
+use App\Models\Ranting;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class CabangController extends Controller
+class RantingController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Tampilkan Data Cabang
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| Tampilkan Data Ranting
+|--------------------------------------------------------------------------
+*/
     public function index(Request $request)
     {
         $search = $request->search;
         $filter = $request->filter;
+        $cabang = $request->cabang;
 
-        $cabangs = Cabang::with('rantings')
+        $cabangs = Cabang::orderBy('nama_cabang')->get();
+
+        $rantings = Ranting::with('cabang')
             ->withCount([
                 'anggota',
 
@@ -38,43 +42,70 @@ class CabangController extends Controller
             ->when($search, function ($query) use ($search) {
 
                 $query->where(
-                    'nama_cabang',
+                    'nama_ranting',
                     'like',
                     '%' . $search . '%'
                 );
 
             })
 
-            // FILTER
-            ->when($filter == 'AKTIF', function ($query) {
+            // FILTER CABANG
+            ->when($cabang, function ($query) use ($cabang) {
 
-                $query->where('status', 'AKTIF');
+                $query->where(
+                    'cabang_id',
+                    $cabang
+                );
 
             })
 
-            ->when($filter == 'NONAKTIF', function ($query) {
+            // FILTER STATUS
+            ->when($filter == 'AKTIF', function ($query) {
 
-                $query->where('status', 'NONAKTIF');
+                $query->where(
+                    'status',
+                    'AKTIF'
+                );
+
+            })
+
+            ->when($filter == 'VAKUM', function ($query) {
+
+                $query->where(
+                    'status',
+                    'VAKUM'
+                );
 
             })
 
             ->when($filter == 'KURANG AKTIF', function ($query) {
 
-                $query->where('status', 'KURANG AKTIF');
+                $query->where(
+                    'status',
+                    'KURANG AKTIF'
+                );
 
             })
 
+            // URUT TERLAMA
             ->when($filter == 'terlama', function ($query) {
 
-                $query->orderBy('id', 'asc');
+                $query->orderBy(
+                    'id',
+                    'asc'
+                );
 
             })
 
+            // URUT TERBARU
             ->when(
                 $filter == 'terbaru' || !$filter,
                 function ($query) {
 
-                    $query->orderBy('id', 'desc');
+                    $query->orderBy(
+                        'id',
+                        'desc'
+                    );
 
                 }
             )
@@ -84,125 +115,161 @@ class CabangController extends Controller
             ->withQueryString();
 
         return view(
-            'organisasi.cabang.index',
-            compact('cabangs')
+            'organisasi.ranting.index',
+            compact(
+                'rantings',
+                'cabangs'
+            )
         );
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Halaman Tambah Cabang
+    | Form Tambah
     |--------------------------------------------------------------------------
     */
     public function create()
     {
-        return view('organisasi.cabang.tambah');
+        $cabangs = Cabang::orderBy('nama_cabang')->get();
+
+        return view(
+            'organisasi.ranting.tambah',
+            compact('cabangs')
+        );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Simpan Cabang Baru
+    | Simpan Data
     |--------------------------------------------------------------------------
     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_cabang' => 'required|max:100',
+
+            'cabang_id' => 'required',
+
+            'nama_ranting' => 'required|max:100',
+
             'status' => 'required'
+
         ]);
 
-        Cabang::create([
-            'nama_cabang' => $request->nama_cabang,
+        Ranting::create([
+
+            'cabang_id' => $request->cabang_id,
+
+            'nama_ranting' => $request->nama_ranting,
+
             'status' => $request->status
+
         ]);
 
         return redirect()
-                ->route('cabang.index')
-                ->with(
-                    'success',
-                    'Cabang berhasil ditambahkan'
-                );
+            ->route('ranting.index')
+            ->with(
+                'success',
+                'Ranting berhasil ditambahkan'
+            );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Halaman Edit
+    | Edit
     |--------------------------------------------------------------------------
     */
     public function edit(string $id)
     {
-        $cabang = Cabang::findOrFail($id);
+        $ranting = Ranting::findOrFail($id);
+
+        $cabangs = Cabang::orderBy('nama_cabang')->get();
 
         return view(
-            'organisasi.cabang.edit',
-            compact('cabang')
+            'organisasi.ranting.edit',
+            compact(
+                'ranting',
+                'cabangs'
+            )
         );
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | Update Cabang
+    | Update
     |--------------------------------------------------------------------------
     */
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'nama_cabang' => 'required|max:100',
+
+            'cabang_id' => 'required',
+
+            'nama_ranting' => 'required|max:100',
+
             'status' => 'required'
+
         ]);
 
-        $cabang = Cabang::findOrFail($id);
+        $ranting = Ranting::findOrFail($id);
 
-        $cabang->update([
-            'nama_cabang' => $request->nama_cabang,
+        $ranting->update([
+
+            'cabang_id' => $request->cabang_id,
+
+            'nama_ranting' => $request->nama_ranting,
+
             'status' => $request->status
+
         ]);
 
         return redirect()
-                ->route('cabang.index')
-                ->with(
-                    'success_update',
-                    'Cabang berhasil diperbarui'
-                );
+            ->route('ranting.index')
+            ->with(
+                'success_update',
+                'Ranting berhasil diperbarui'
+            );
     }
+
 
     /*
     |--------------------------------------------------------------------------
-    | Cetak PDF Cabang
+    | PDF
     |--------------------------------------------------------------------------
     */
-
     public function pdf()
     {
-        $cabangs = Cabang::orderBy('id')->get();
+        $rantings = Ranting::with('cabang')
+            ->orderBy('id')
+            ->get();
 
         $pdf = Pdf::loadView(
-            'organisasi.cabang.pdf',
-            compact('cabangs')
+            'organisasi.ranting.pdf',
+            compact('rantings')
         );
 
-        return $pdf->stream('data-cabang.pdf');
+        return $pdf->stream('data-ranting.pdf');
     }
+
 
     /*
     |--------------------------------------------------------------------------
-    | Hapus Cabang
+    | Hapus
     |--------------------------------------------------------------------------
     */
     public function destroy(string $id)
     {
-        $cabang = Cabang::findOrFail($id);
+        $ranting = Ranting::findOrFail($id);
 
-        $cabang->delete();
+        $ranting->delete();
 
         return redirect()
-                ->route('cabang.index')
-                ->with(
-                    'success_delete',
-                    'Cabang berhasil dihapus'
-                );
+            ->route('ranting.index')
+            ->with(
+                'success_delete',
+                'Ranting berhasil dihapus'
+            );
     }
 }

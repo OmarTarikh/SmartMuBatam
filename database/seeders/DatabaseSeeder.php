@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CabangSeeder::class,
             RantingSeeder::class,
+            AnggotaSeeder::class,
+            AumSeeder::class,
         ]);
     }
 }
