@@ -7,6 +7,7 @@ use App\Http\Controllers\RantingController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AumController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\KeuanganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -298,16 +299,99 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('role:superadmin,keuangan')->group(function () {
+    Route::middleware('role:superadmin,keuangan')->prefix('keuangan')->group(function () {
 
-        Route::get('/keuangan', function () {
-            return view('keuangan.index');
-        });
+        /*
+        |--------------------------------------------------------------------------
+        | KAS
+        |--------------------------------------------------------------------------
+        */
 
-        Route::get('/keuangan/tambah', function () {
-            return view('keuangan.tambah');
-        });
+        Route::get('/kas', [KeuanganController::class, 'indexKas'])
+            ->name('keuangan.kas');
+
+        Route::get('/kas/tambah', [KeuanganController::class, 'createKas'])
+            ->name('keuangan.kas.tambah');
+
+        Route::get('/kas/pdf', [KeuanganController::class, 'pdfKas'])
+            ->name('keuangan.kas.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | WAKAF
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/wakaf', [KeuanganController::class, 'indexWakaf'])
+            ->name('keuangan.wakaf');
+
+        Route::get('/wakaf/tambah', [KeuanganController::class, 'createWakaf'])
+            ->name('keuangan.wakaf.tambah');
+
+        Route::get('/wakaf/pdf', [KeuanganController::class, 'pdfWakaf'])
+            ->name('keuangan.wakaf.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | INFAQ
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/infaq', [KeuanganController::class, 'indexInfaq'])
+            ->name('keuangan.infaq');
+
+        Route::get('/infaq/tambah', [KeuanganController::class, 'createInfaq'])
+            ->name('keuangan.infaq.tambah');
+
+        Route::get('/infaq/pdf', [KeuanganController::class, 'pdfInfaq'])
+            ->name('keuangan.infaq.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SEDEKAH
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/sedekah', [KeuanganController::class, 'indexSedekah'])
+            ->name('keuangan.sedekah');
+
+        Route::get('/sedekah/tambah', [KeuanganController::class, 'createSedekah'])
+            ->name('keuangan.sedekah.tambah');
+
+        Route::get('/sedekah/pdf', [KeuanganController::class, 'pdfSedekah'])
+            ->name('keuangan.sedekah.pdf');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRUD
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post('/store', [KeuanganController::class, 'store'])
+            ->name('keuangan.store');
+
+        Route::get('/{id}/edit', [KeuanganController::class, 'edit'])
+            ->name('keuangan.edit');
+
+        Route::put('/{id}', [KeuanganController::class, 'update'])
+            ->name('keuangan.update');
+
+        Route::delete('/{id}', [KeuanganController::class, 'destroy'])
+            ->name('keuangan.destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AJAX
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/get-masjid/{id}', [KeuanganController::class, 'getMasjid'])
+            ->name('keuangan.getMasjid');
 
     });
-
 });

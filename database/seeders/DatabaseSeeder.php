@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
             AumSekolahSeeder::class,
             AumKlinikSeeder::class,
             MasjidSeeder::class,
+            AsetKeuanganSeeder::class,
+            AsetKasSeeder::class,
+            AsetInfaqSeeder::class,
+            AsetSedekahSeeder::class,
+            AsetWakafSeeder::class,
+            
         ]);
     }
 }

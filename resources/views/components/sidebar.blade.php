@@ -115,9 +115,9 @@
         {{-- KEUANGAN --}}
         @if(in_array(auth()->user()->role,['superadmin','keuangan']))
         <li class="nav-item sidebar-divider-bottom">
-            <a href="{{ url('/keuangan') }}" class="nav-link sidebar-link">
+            <a href="{{ url('/keuangan/kas') }}" class="nav-link sidebar-link">
                 <iconify-icon icon="mdi:cash"></iconify-icon>
-                <span>Keuangan</span>
+                <span>Aset Keuangan</span>
             </a>
         </li>
         @endif

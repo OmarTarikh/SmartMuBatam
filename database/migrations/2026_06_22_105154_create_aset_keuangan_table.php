@@ -12,22 +12,26 @@ return new class extends Migration
 
             $table->id();
 
-            $table->enum('jenis',[
-                'kas_masuk',
-                'kas_keluar',
-                'aset_tanah',
-                'aset_bangunan'
+            $table->enum('jenis', [
+                'kas',
+                'wakaf',
+                'infaq',
+                'sedekah'
             ]);
 
-            $table->decimal('jumlah',15,2)->nullable();
-
-            $table->text('keterangan')->nullable();
-
-            $table->text('lokasi')->nullable();
+            $table->foreignId('cabang_id')
+                ->nullable()
+                ->constrained('cabang')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
 
             $table->foreignId('masjid_id')
                 ->nullable()
-                ->constrained('masjid');
+                ->constrained('masjid')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->text('lokasi')->nullable();
 
             $table->dateTime('tanggal')->nullable();
 
