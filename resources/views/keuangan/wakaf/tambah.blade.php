@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Keuangan > Tambah Data')
+
+@section('title', 'Keuangan > Wakaf > Tambah')
 
 @section('content')
 
@@ -11,7 +12,9 @@
         <div class="form-card-header">
 
             <h5>
-                Form Tambah Keuangan
+
+                Form Tambah Data Wakaf
+
             </h5>
 
         </div>
@@ -19,31 +22,62 @@
         <!-- BODY -->
         <div class="form-card-body">
 
-            <form action="#" method="POST">
+            <form
+                action="{{ route('keuangan.store') }}"
+                method="POST">
 
                 @csrf
 
+                <input
+                    type="hidden"
+                    name="jenis"
+                    value="wakaf">
+
                 <div class="row g-4">
 
-                    <!-- JENIS -->
+                    <!-- CABANG -->
                     <div class="col-md-6">
 
                         <label class="custom-label">
-                            Jenis
+
+                            Cabang
+
                         </label>
 
-                        <select class="form-select custom-input">
+                        <select
+                            name="cabang_id"
+                            class="form-select custom-input @error('cabang_id') is-invalid @enderror"
+                            required>
 
-                            <option selected disabled>
-                                Pilih jenis
+                            <option value="">
+
+                                Pilih Cabang
+
                             </option>
 
-                            <option>kas_masuk</option>
-                            <option>kas_keluar</option>
-                            <option>aset_tanah</option>
-                            <option>aset_bangunan</option>
+                            @foreach($cabangs as $cabang)
+
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ old('cabang_id') == $cabang->id ? 'selected' : '' }}>
+
+                                    {{ $cabang->nama_cabang }}
+
+                                </option>
+
+                            @endforeach
 
                         </select>
+
+                        @error('cabang_id')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
@@ -51,38 +85,31 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
+
                             Jumlah
+
                         </label>
 
-                        <input type="number"
-                               class="form-control custom-input"
-                               placeholder="Masukkan jumlah">
+                        <div class="input-group">
 
-                    </div>
+                            <span class="input-group-text">
 
-                    <!-- KETERANGAN -->
-                    <div class="col-md-6">
+                                Rp
 
-                        <label class="custom-label">
-                            Keterangan
-                        </label>
+                            </span>
 
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan keterangan">
+                            <input
+                                type="text"
+                                id="jumlah_view"
+                                class="form-control custom-input"
+                                placeholder="0">
 
-                    </div>
+                            <input
+                                type="hidden"
+                                id="jumlah"
+                                name="jumlah">
 
-                    <!-- LOKASI -->
-                    <div class="col-md-6">
-
-                        <label class="custom-label">
-                            Lokasi
-                        </label>
-
-                        <input type="text"
-                               class="form-control custom-input"
-                               placeholder="Masukkan lokasi">
+                        </div>
 
                     </div>
 
@@ -90,30 +117,100 @@
                     <div class="col-md-6">
 
                         <label class="custom-label">
+
                             Tanggal
+
                         </label>
 
-                        <input type="date"
-                               class="form-control custom-input">
+                        <input
+                            type="date"
+                            name="tanggal"
+                            value="{{ old('tanggal') }}"
+                            class="form-control custom-input @error('tanggal') is-invalid @enderror">
+
+                        @error('tanggal')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
 
                     </div>
 
-                </div>
+                    <!-- LOKASI -->
+                    <div class="col-md-6">
 
-                <!-- BUTTON -->
+                        <label class="custom-label">
+
+                            Lokasi
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="lokasi"
+                            value="{{ old('lokasi') }}"
+                            class="form-control custom-input @error('lokasi') is-invalid @enderror"
+                            placeholder="Masukkan lokasi">
+
+                        @error('lokasi')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+                    <!-- KETERANGAN -->
+                    <div class="col-md-12">
+
+                        <label class="custom-label">
+
+                            Keterangan
+
+                        </label>
+
+                        <textarea
+                            rows="4"
+                            name="keterangan"
+                            class="form-control custom-input @error('keterangan') is-invalid @enderror"
+                            placeholder="Masukkan keterangan">{{ old('keterangan') }}</textarea>
+
+                        @error('keterangan')
+
+                            <div class="invalid-feedback">
+
+                                {{ $message }}
+
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+                                    <!-- BUTTON -->
                 <div class="d-flex justify-content-end gap-3 mt-5">
 
-                    <a href="{{ url('/keuangan') }}"
-                       class="btn back-btn">
+                    <a
+                        href="{{ route('keuangan.wakaf') }}"
+                        class="btn back-btn">
 
                         Kembali
 
                     </a>
 
-                    <button type="submit"
-                            class="btn save-btn">
+                    <button
+                        type="submit"
+                        class="btn save-btn">
 
-                        Simpan Data
+                        Simpan
 
                     </button>
 
@@ -126,5 +223,34 @@
     </div>
 
 </div>
+
+@push('scripts')
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    const inputView = document.getElementById('jumlah_view');
+
+    const inputReal = document.getElementById('jumlah');
+
+    inputView.addEventListener('input', function(){
+
+        // Ambil hanya angka
+        let angka = this.value.replace(/\D/g,'');
+
+        // Simpan ke input hidden
+        inputReal.value = angka;
+
+        // Format ribuan
+        this.value = angka.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+
+    });
+
+});
+
+</script>
+
+@endpush
 
 @endsection

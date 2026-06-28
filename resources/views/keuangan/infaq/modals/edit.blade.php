@@ -1,110 +1,242 @@
-<div class="modal fade" id="editModal" tabindex="-1">
+{{-- ========================================
+     resources/views/keuangan/infaq/modals/edit.blade.php
+======================================== --}}
 
-    <div class="modal-dialog modal-dialog-centered">
+@foreach($infaqs as $item)
+
+<div class="modal fade"
+     id="editModal{{ $item->id }}"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
 
         <div class="modal-content custom-modal">
 
+            <!-- HEADER -->
             <div class="modal-header custom-modal-header">
 
                 <h5 class="modal-title">
-                    Edit Keuangan
+
+                    Edit Data Infaq
+
                 </h5>
 
-                <button type="button"
-                        class="btn-close shadow-none"
-                        data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn-close shadow-none"
+                    data-bs-dismiss="modal">
                 </button>
 
             </div>
 
-            <div class="modal-body">
+            <!-- BODY -->
+            <form
+                action="{{ route('keuangan.update',$item->id) }}"
+                method="POST">
 
-                <div class="mb-3">
+                @csrf
+                @method('PUT')
 
-                    <label class="modal-label">
-                        Jenis
-                    </label>
+                <div class="modal-body">
 
-                    <select class="form-select custom-input">
+                    <!-- CABANG -->
+                    <div class="mb-3">
 
-                        <option>kas_masuk</option>
-                        <option>kas_keluar</option>
-                        <option>aset_tanah</option>
-                        <option>aset_bangunan</option>
+                        <label class="modal-label">
 
-                    </select>
+                            Cabang
 
-                </div>
+                        </label>
 
-                <div class="mb-3">
+                        <select
+                            name="cabang_id"
+                            class="form-select custom-input">
 
-                    <label class="modal-label">
-                        Jumlah
-                    </label>
+                            @foreach($cabangs as $cabang)
 
-                    <input type="number"
-                           class="form-control custom-input"
-                           value="5000000">
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ $item->cabang_id == $cabang->id ? 'selected' : '' }}>
 
-                </div>
+                                    {{ $cabang->nama_cabang }}
 
-                <div class="mb-3">
+                                </option>
 
-                    <label class="modal-label">
-                        Keterangan
-                    </label>
+                            @endforeach
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Donasi Jumat">
+                        </select>
 
-                </div>
+                    </div>
 
-                <div class="mb-3">
+                    <!-- MASJID -->
+                    <div class="mb-3">
 
-                    <label class="modal-label">
-                        Lokasi
-                    </label>
+                        <label class="modal-label">
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Baloi">
+                            Masjid
 
-                </div>
+                        </label>
 
-                <div class="mb-4">
+                        <select
+                            name="masjid_id"
+                            class="form-select custom-input">
 
-                    <label class="modal-label">
-                        Tanggal
-                    </label>
+                            @foreach($masjids as $masjid)
 
-                    <input type="date"
-                           class="form-control custom-input"
-                           value="2025-01-10">
+                                <option
+                                    value="{{ $masjid->id }}"
+                                    {{ $item->masjid_id == $masjid->id ? 'selected' : '' }}>
 
-                </div>
+                                    {{ $masjid->nama_masjid }}
 
-                <div class="d-flex justify-content-end gap-2">
+                                </option>
 
-                    <button class="btn modal-cancel-btn"
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <!-- JUMLAH -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Jumlah Infaq
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+
+                                Rp
+
+                            </span>
+
+                            <input
+                                type="text"
+                                class="form-control custom-input jumlah-view"
+                                value="{{ number_format(optional($item->infaq)->jumlah ?? 0,0,',','.') }}">
+
+                            <input
+                                type="hidden"
+                                name="jumlah"
+                                class="jumlah-real"
+                                value="{{ optional($item->infaq)->jumlah }}">
+
+                        </div>
+
+                    </div>
+
+                    <!-- TANGGAL -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Tanggal
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="tanggal"
+                            value="{{ \Carbon\Carbon::parse($item->tanggal)->format('Y-m-d') }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- LOKASI -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Lokasi
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="lokasi"
+                            value="{{ $item->lokasi }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- KETERANGAN -->
+                    <div class="mb-4">
+
+                        <label class="modal-label">
+
+                            Keterangan
+
+                        </label>
+
+                        <textarea
+                            name="keterangan"
+                            rows="4"
+                            class="form-control custom-input">{{ optional($item->infaq)->keterangan }}</textarea>
+
+                    </div>
+
+                                        <!-- BUTTON -->
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <button
+                            type="button"
+                            class="btn modal-cancel-btn"
                             data-bs-dismiss="modal">
 
-                        Batal
+                            Batal
 
-                    </button>
+                        </button>
 
-                    <button class="btn modal-save-btn">
+                        <button
+                            type="submit"
+                            class="btn modal-save-btn">
 
-                        Simpan
+                            Simpan
 
-                    </button>
+                        </button>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </form>
 
         </div>
 
     </div>
 
 </div>
+
+@endforeach
+
+@push('scripts')
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    document.querySelectorAll('.jumlah-view').forEach(function(input){
+
+        input.addEventListener('input', function(){
+
+            let angka = this.value.replace(/\D/g,'');
+
+            this.closest('.input-group')
+                .querySelector('.jumlah-real')
+                .value = angka;
+
+            this.value = angka.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+
+        });
+
+    });
+
+});
+
+</script>
+
+@endpush

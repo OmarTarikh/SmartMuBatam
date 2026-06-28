@@ -1,112 +1,215 @@
 @extends('layouts.app')
-@section('title', 'Keuangan')
+@section('title', 'Keuangan > Wakaf')
 
 @section('content')
 
 <div class="container-fluid py-4">
 
-    <!-- TOP -->
-    <div class="d-flex justify-content-between align-items-start flex-wrap gap-4 mb-4">
+    <!-- FILTER & ACTION -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4 mb-4">
 
         <!-- LEFT -->
-        <div>
+        <div class="d-flex flex-column gap-3">
 
-            <!-- SORT -->
-            <div class="d-flex align-items-center gap-3 mb-3">
+            <!-- FILTER -->
+            <div class="d-flex align-items-center gap-2">
 
-                <label class="filter-label">
-                    Urut berdasarkan
-                </label>
+                <form method="GET" class="d-flex align-items-center gap-2">
 
-                <select class="form-select custom-select">
+                    <input
+                        type="hidden"
+                        name="cabang"
+                        value="{{ request('cabang') }}">
 
-                    <option>terbaru</option>
-                    <option>terlama</option>
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ request('search') }}">
 
-                </select>
+                    <label class="filter-label m-0">
 
-            </div>
+                        Urut berdasarkan
 
-            <!-- FILTER CABANG -->
-            <div class="d-flex flex-wrap align-items-center cabang-filter mb-3">
+                    </label>
 
-                <button class="cabang-filter-btn active">
-                    Batam Kota
-                </button>
+                    <select
+                        name="filter"
+                        class="form-select custom-select"
+                        onchange="this.form.submit()">
 
-                <button class="cabang-filter-btn">
-                    Sekupang
-                </button>
+                        <option value="terbaru"
+                            {{ request('filter') == 'terbaru' ? 'selected' : '' }}>
 
-                <button class="cabang-filter-btn">
-                    Batu Aji
-                </button>
+                            Terbaru
 
-                <button class="cabang-filter-btn">
-                    Nongsa
-                </button>
+                        </option>
 
-                <button class="cabang-filter-btn">
-                    Sagulung
-                </button>
+                        <option value="terlama"
+                            {{ request('filter') == 'terlama' ? 'selected' : '' }}>
 
-            </div>
+                            Terlama
 
-            <!-- FILTER RANTING -->
-            <div class="d-flex flex-wrap align-items-center gap-4">
+                        </option>
 
-                <button class="filter-ranting-line active">
-                    Tanjung Riau
-                </button>
+                        <option value="masuk"
+                            {{ request('filter') == 'masuk' ? 'selected' : '' }}>
 
-                <button class="filter-ranting-line">
-                    Tiban
-                </button>
+                            Kas Masuk
 
-                <button class="filter-ranting-line">
-                    Patam Lestari
-                </button>
+                        </option>
+
+                        <option value="keluar"
+                            {{ request('filter') == 'keluar' ? 'selected' : '' }}>
+
+                            Kas Keluar
+
+                        </option>
+
+                    </select>
+
+                </form>
 
             </div>
 
         </div>
 
         <!-- RIGHT -->
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+
+            <!-- ADD -->
+            <a href="{{ route('keuangan.wakaf.tambah') }}"
+               class="btn custom-btn-add d-flex align-items-center gap-2">
+
+                <iconify-icon icon="mdi:plus" width="20"></iconify-icon>
+
+                <span>TAMBAH DATA</span>
+
+            </a>
+
+            <!-- PDF -->
+            <a href="{{ route('keuangan.wakaf.pdf') }}"
+               target="_blank"
+               class="btn custom-btn-pdf d-flex align-items-center gap-2">
+
+                <iconify-icon icon="mdi:file-pdf-box" width="18"></iconify-icon>
+
+                <span>CETAK PDF</span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- FILTER JENIS + CABANG + SEARCH -->
+    <div class="d-flex align-items-start justify-content-between gap-4 mb-3">
+
         <div>
 
-            <!-- BUTTON -->
-            <div class="d-flex justify-content-end gap-2 mb-3">
+            <!-- FILTER JENIS -->
+            <div class="aum-filter d-flex flex-nowrap mb-4">
 
-                <a href="{{ url('/keuangan/tambah') }}"
-                   class="btn custom-btn-add">
+                <a href="{{ route('keuangan.kas') }}"
+                   class="aum-filter-btn {{ request()->routeIs('keuangan.kas') ? 'active' : '' }}">
 
-                    <iconify-icon icon="mdi:plus"></iconify-icon>
-
-                    Tambah Data
+                    Kas
 
                 </a>
 
-                <button class="btn custom-btn-pdf">
+                <a href="{{ route('keuangan.wakaf') }}"
+                   class="aum-filter-btn {{ request()->routeIs('keuangan.wakaf') ? 'active' : '' }}">
 
-                    <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>
+                    Wakaf
 
-                    Cetak PDF
+                </a>
 
-                </button>
+                <a href="{{ route('keuangan.infaq') }}"
+                   class="aum-filter-btn {{ request()->routeIs('keuangan.infaq') ? 'active' : '' }}">
+
+                    Infaq
+
+                </a>
+
+                <a href="{{ route('keuangan.sedekah') }}"
+                   class="aum-filter-btn {{ request()->routeIs('keuangan.sedekah') ? 'active' : '' }}">
+
+                    Sedekah
+
+                </a>
 
             </div>
 
-            <!-- SEARCH -->
-            <div class="d-flex align-items-center gap-2 justify-content-end">
+            <!-- FILTER CABANG -->
+            <div class="cabang-filter d-flex flex-nowrap mb-4">
 
-                <label class="search-label">
+                <a href="{{ route('keuangan.kas',[
+                        'filter'=>request('filter'),
+                        'search'=>request('search')
+                    ]) }}"
+                   class="cabang-filter-btn {{ request('cabang') == null ? 'active' : '' }}">
+
+                    Semua
+
+                </a>
+
+                @foreach($cabangs as $cabang)
+
+                    <a
+                        href="{{ route('keuangan.kas',[
+                            'cabang'=>$cabang->id,
+                            'filter'=>request('filter'),
+                            'search'=>request('search')
+                        ]) }}"
+                        class="cabang-filter-btn {{ request('cabang')==$cabang->id ? 'active' : '' }}">
+
+                        {{ $cabang->nama_cabang }}
+
+                    </a>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+        <!-- SEARCH -->
+        <div class="d-flex justify-content-end mb-3">
+
+            <form
+                method="GET"
+                id="searchForm"
+                class="d-flex align-items-center gap-2">
+
+                <input
+                    type="hidden"
+                    name="filter"
+                    value="{{ request('filter') }}">
+
+                <input
+                    type="hidden"
+                    name="cabang"
+                    value="{{ request('cabang') }}">
+
+                <input
+                    type="hidden"
+                    name="ranting"
+                    value="{{ request('ranting') }}">
+
+                <span class="search-label text-nowrap">
+
                     Cari data :
-                </label>
 
-                <input type="text"
-                       class="form-control custom-search">
+                </span>
 
-            </div>
+                <input
+                    type="text"
+                    id="searchInput"
+                    name="search"
+                    value="{{ request('search') }}"
+                    class="form-control custom-search"
+                    placeholder="Cari...">
+
+            </form>
 
         </div>
 
@@ -121,13 +224,37 @@
 
                 <tr>
 
-                    <th>NO</th>
-                    <th>JENIS</th>
-                    <th>JUMLAH</th>
-                    <th>KETERANGAN</th>
-                    <th>LOKASI</th>
-                    <th>TANGGAL</th>
-                    <th>OPSI</th>
+                    <th style="width:20%">CABANG</th>
+
+                    <th class="text-end" style="width:18%">
+
+                        JUMLAH
+
+                    </th>
+
+                    <th style="width:30%">
+
+                        KETERANGAN
+
+                    </th>
+
+                    <th style="width:17%">
+
+                        LOKASI
+
+                    </th>
+
+                    <th class="text-center" style="width:12%">
+
+                        TANGGAL
+
+                    </th>
+
+                    <th class="text-center" style="width:120px">
+
+                        OPSI
+
+                    </th>
 
                 </tr>
 
@@ -135,62 +262,70 @@
 
             <tbody>
 
-                @for ($i = 1; $i <= 10; $i++)
+                @forelse($wakafs as $item)
 
                 <tr>
 
-                    <td>{{ $i }}</td>
-
                     <td>
-                        @if($i % 2 == 0)
-                            kas_keluar
-                        @else
-                            kas_masuk
-                        @endif
+
+                        <div class="fw-semibold">
+
+                            {{ $item->cabang->nama_cabang ?? '-' }}
+
+                        </div>
+
+                    </td>
+
+                    <td class="text-end">
+
+                        Rp {{ number_format(optional($item->wakaf)->jumlah ?? 0,0,',','.') }}
+
                     </td>
 
                     <td>
-                        Rp 5.000.000
+
+                        {{ optional($item->wakaf)->keterangan ?? '-' }}
+
                     </td>
 
                     <td>
-                        Donasi Jumat
+
+                        {{ $item->lokasi }}
+
                     </td>
 
-                    <td>
-                        Baloi
-                    </td>
+                    <td class="text-center">
 
-                    <td>
-                        2025-01-10
+                        {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y') }}
+
                     </td>
 
                     <td>
 
                         <div class="d-flex justify-content-center gap-2">
 
-                            <!-- DETAIL -->
-                            <button class="btn action-btn btn-detail"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#detailModal">
+                            <button
+                                class="action-btn btn-detail"
+                                data-bs-toggle="modal"
+                                data-bs-target="#detailModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:eye"></iconify-icon>
 
                             </button>
 
-                            <!-- EDIT -->
-                            <button class="btn action-btn btn-edit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                            <button
+                                class="action-btn btn-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:pencil"></iconify-icon>
 
                             </button>
 
-                            <!-- DELETE -->
-                            <button class="btn action-btn btn-delete"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal">
+                            <button
+                                class="action-btn btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:trash-can"></iconify-icon>
 
@@ -202,34 +337,118 @@
 
                 </tr>
 
-                @endfor
+                @empty
+
+                <tr>
+
+                    <td colspan="6" class="text-center py-5 text-muted">
+
+                        Belum ada data wakaf.
+
+                    </td>
+
+                </tr>
+
+                @endforelse
 
             </tbody>
 
         </table>
 
-    </div>
-
-    <!-- FOOT -->
+    </div>    
+    
+    <!-- PAGINATION -->
     <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
 
+        <!-- INFO -->
         <div class="table-info-text">
-            Menunjukan 1 sampai 10 dari 10 entri
+
+            Menunjukan
+
+            {{ $wakafs->firstItem() ?? 0 }}
+
+            sampai
+
+            {{ $wakafs->lastItem() ?? 0 }}
+
+            dari
+
+            {{ $wakafs->total() }}
+
+            entri
+
         </div>
 
-        <div class="custom-pagination">
+        <!-- PAGINATION -->
+        <div class="custom-pagination d-flex align-items-center">
 
-            <button class="page-btn page-prev">
-                Sebelumnya
-            </button>
+            {{-- Sebelumnya --}}
+            @if ($wakafs->onFirstPage())
 
-            <button class="page-btn active">
-                1
-            </button>
+                <button class="page-btn page-prev" disabled>
 
-            <button class="page-btn page-next">
-                Berikutnya
-            </button>
+                    Sebelumnya
+
+                </button>
+
+            @else
+
+                <a
+                    href="{{ $wakafs->previousPageUrl() }}"
+                    class="page-btn page-prev">
+
+                    Sebelumnya
+
+                </a>
+
+            @endif
+
+            @php
+
+                $start = max($wakafs->currentPage() - 2, 1);
+
+                $end = min($start + 4, $wakafs->lastPage());
+
+                if (($end - $start) < 4) {
+
+                    $start = max($end - 4, 1);
+
+                }
+
+            @endphp
+
+            @for($page = $start; $page <= $end; $page++)
+
+                <a
+                    href="{{ $wakafs->url($page) }}"
+                    class="page-btn {{ $page == $wakafs->currentPage() ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+            @endfor
+
+            {{-- Berikutnya --}}
+            @if($wakafs->hasMorePages())
+
+                <a
+                    href="{{ $wakafs->nextPageUrl() }}"
+                    class="page-btn page-next">
+
+                    Berikutnya
+
+                </a>
+
+            @else
+
+                <button class="page-btn page-next" disabled>
+
+                    Berikutnya
+
+                </button>
+
+            @endif
 
         </div>
 
@@ -237,8 +456,30 @@
 
 </div>
 
-@include('keuangan.modals.detail')
-@include('keuangan.modals.edit')
-@include('keuangan.modals.delete')
+@push('scripts')
+
+<script>
+
+let timer;
+
+document.getElementById('searchInput').addEventListener('input', function () {
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+
+        document.getElementById('searchForm').submit();
+
+    }, 500);
+
+});
+
+</script>
+
+@endpush
+
+@include('keuangan.wakaf.modals.detail')
+@include('keuangan.wakaf.modals.edit')
+@include('keuangan.wakaf.modals.delete')
 
 @endsection

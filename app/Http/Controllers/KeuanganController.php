@@ -51,17 +51,25 @@ public function indexKas(Request $request)
             $query->where(function ($q) use ($search) {
 
                 $q->where('lokasi', 'like', "%{$search}%")
+                ->orWhere('tanggal', 'like', "%{$search}%")
 
-                  ->orWhereHas('cabang', function ($c) use ($search) {
+                ->orWhereHas('cabang', function ($c) use ($search) {
 
                         $c->where('nama_cabang', 'like', "%{$search}%");
 
-                  });
+                })
+
+                ->orWhereHas('kas', function ($kas) use ($search) {
+
+                        $kas->where('keterangan', 'like', "%{$search}%")
+                            ->orWhere('tipe', 'like', "%{$search}%")
+                            ->orWhere('jumlah', 'like', "%{$search}%");
+
+                });
 
             });
 
         })
-
         /*
         |--------------------------------------------------------------------------
         | FILTER CABANG
@@ -173,21 +181,24 @@ public function indexWakaf(Request $request)
             $query->where(function ($q) use ($search) {
 
                 $q->where('lokasi', 'like', "%{$search}%")
+                ->orWhere('tanggal', 'like', "%{$search}%")
 
-                  ->orWhereHas('cabang', function ($c) use ($search) {
+                ->orWhereHas('cabang', function ($c) use ($search) {
 
-                        $c->where(
-                            'nama_cabang',
-                            'like',
-                            "%{$search}%"
-                        );
+                        $c->where('nama_cabang', 'like', "%{$search}%");
 
-                  });
+                })
+
+                ->orWhereHas('wakaf', function ($wakaf) use ($search) {
+
+                        $wakaf->where('keterangan', 'like', "%{$search}%")
+                            ->orWhere('jumlah', 'like', "%{$search}%");
+
+                });
 
             });
 
         })
-
         /*
         |--------------------------------------------------------------------------
         | FILTER CABANG
@@ -277,21 +288,30 @@ public function indexInfaq(Request $request)
             $query->where(function ($q) use ($search) {
 
                 $q->where('lokasi', 'like', "%{$search}%")
+                ->orWhere('tanggal', 'like', "%{$search}%")
 
-                  ->orWhereHas('masjid', function ($m) use ($search) {
+                ->orWhereHas('cabang', function ($c) use ($search) {
 
-                        $m->where(
-                            'nama_masjid',
-                            'like',
-                            "%{$search}%"
-                        );
+                        $c->where('nama_cabang', 'like', "%{$search}%");
 
-                  });
+                })
+
+                ->orWhereHas('masjid', function ($m) use ($search) {
+
+                        $m->where('nama_masjid', 'like', "%{$search}%");
+
+                })
+
+                ->orWhereHas('infaq', function ($infaq) use ($search) {
+
+                        $infaq->where('keterangan', 'like', "%{$search}%")
+                            ->orWhere('jumlah', 'like', "%{$search}%");
+
+                });
 
             });
 
         })
-
         /*
         |--------------------------------------------------------------------------
         | FILTER CABANG
@@ -383,21 +403,30 @@ public function indexSedekah(Request $request)
             $query->where(function ($q) use ($search) {
 
                 $q->where('lokasi', 'like', "%{$search}%")
+                ->orWhere('tanggal', 'like', "%{$search}%")
 
-                  ->orWhereHas('masjid', function ($m) use ($search) {
+                ->orWhereHas('cabang', function ($c) use ($search) {
 
-                        $m->where(
-                            'nama_masjid',
-                            'like',
-                            "%{$search}%"
-                        );
+                        $c->where('nama_cabang', 'like', "%{$search}%");
 
-                  });
+                })
+
+                ->orWhereHas('masjid', function ($m) use ($search) {
+
+                        $m->where('nama_masjid', 'like', "%{$search}%");
+
+                })
+
+                ->orWhereHas('sedekah', function ($sedekah) use ($search) {
+
+                        $sedekah->where('keterangan', 'like', "%{$search}%")
+                                ->orWhere('jumlah', 'like', "%{$search}%");
+
+                });
 
             });
 
         })
-
         /*
         |--------------------------------------------------------------------------
         | FILTER CABANG
