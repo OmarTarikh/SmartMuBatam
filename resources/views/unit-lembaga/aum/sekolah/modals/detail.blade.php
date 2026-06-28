@@ -94,7 +94,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->jumlah_siswa }}
+                        {{ optional($aum->sekolah)->jumlah_siswa ?? '-' }}
 
                     </div>
 
@@ -111,7 +111,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->jumlah_guru }}
+                        {{ optional($aum->sekolah)->jumlah_guru ?? '-' }}
 
                     </div>
 
@@ -128,7 +128,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->akreditasi }}
+                        {{ optional($aum->sekolah)->akreditasi ?? '-' }}
 
                     </div>
 

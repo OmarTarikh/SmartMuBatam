@@ -129,7 +129,7 @@
                         <input
                             type="number"
                             name="jumlah_pasien"
-                            value="{{ $aum->jumlah_pasien }}"
+                            value="{{ optional($aum->klinik)->jumlah_pasien }}"
                             class="form-control custom-input">
 
                     </div>
@@ -146,7 +146,7 @@
                         <input
                             type="number"
                             name="jumlah_dokter"
-                            value="{{ $aum->jumlah_dokter }}"
+                            value="{{ optional($aum->klinik)->jumlah_dokter }}"
                             class="form-control custom-input">
 
                     </div>
@@ -163,7 +163,7 @@
                         <input
                             type="number"
                             name="kapasitas"
-                            value="{{ $aum->kapasitas }}"
+                            value="{{ optional($aum->klinik)->kapasitas }}"
                             class="form-control custom-input">
 
                     </div>

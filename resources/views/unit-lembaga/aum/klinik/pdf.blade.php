@@ -108,19 +108,19 @@
 
                 <td>
 
-                    {{ $aum->jumlah_pasien ?? '-' }}
+                    {{ optional($aum->klinik)->jumlah_pasien ?? '-' }}
 
                 </td>
 
                 <td>
 
-                    {{ $aum->jumlah_dokter ?? '-' }}
+                    {{ optional($aum->klinik)->jumlah_dokter ?? '-' }}
 
                 </td>
 
                 <td>
 
-                    {{ $aum->kapasitas ?? '-' }}
+                    {{ optional($aum->klinik)->kapasitas ?? '-' }}
 
                 </td>
 

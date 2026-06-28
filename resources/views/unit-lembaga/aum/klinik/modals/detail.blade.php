@@ -94,7 +94,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->jumlah_pasien }}
+                        {{ optional($aum->klinik)->jumlah_pasien }}
 
                     </div>
 
@@ -111,7 +111,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->jumlah_dokter }}
+                        {{ optional($aum->klinik)->jumlah_dokter }}
 
                     </div>
 
@@ -128,7 +128,7 @@
 
                     <div class="modal-value">
 
-                        {{ $aum->kapasitas }}
+                        {{ optional($aum->klinik)->kapasitas }}
 
                     </div>
 

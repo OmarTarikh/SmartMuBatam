@@ -97,15 +97,15 @@
                 </td>
 
                 <td>
-                    {{ $aum->jumlah_siswa ?? '-' }}
+                    {{ optional($aum->sekolah)->jumlah_siswa ?? '-' }}
                 </td>
 
                 <td>
-                    {{ $aum->jumlah_guru ?? '-' }}
+                    {{ optional($aum->sekolah)->jumlah_guru ?? '-' }}
                 </td>
 
                 <td>
-                    {{ $aum->akreditasi ?? '-' }}
+                    {{ optional($aum->sekolah)->akreditasi ?? '-' }}
                 </td>
 
                 <td>

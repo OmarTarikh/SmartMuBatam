@@ -22,27 +22,19 @@ return new class extends Migration
 
             $table->foreignId('cabang_id')
                 ->nullable()
-                ->constrained('cabang');
+                ->constrained('cabang')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
 
             $table->foreignId('ranting_id')
                 ->nullable()
-                ->constrained('ranting');
+                ->constrained('ranting')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
 
             $table->text('alamat')->nullable();
 
-            $table->integer('jumlah_siswa')->nullable();
-
-            $table->integer('jumlah_guru')->nullable();
-
-            $table->string('akreditasi',10)->nullable();
-
             $table->year('tahun')->nullable();
-
-            $table->integer('jumlah_pasien')->nullable();
-
-            $table->integer('jumlah_dokter')->nullable();
-
-            $table->integer('kapasitas')->nullable();
 
             $table->enum('status_perizinan',[
                 'aktif',
@@ -51,7 +43,6 @@ return new class extends Migration
             ])->nullable();
 
             $table->string('bulan',20)->nullable();
-
         });
     }
 

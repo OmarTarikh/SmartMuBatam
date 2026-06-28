@@ -17,6 +17,22 @@
 
                 <form method="GET" class="d-flex align-items-center gap-2">
 
+                    <!-- mempertahankan filter cabang/ranting/search -->
+                    <input
+                        type="hidden"
+                        name="cabang"
+                        value="{{ request('cabang') }}">
+
+                    <input
+                        type="hidden"
+                        name="ranting"
+                        value="{{ request('ranting') }}">
+
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ request('search') }}">
+
                     <label class="filter-label m-0">
                         Urut berdasarkan
                     </label>
@@ -27,27 +43,27 @@
                         onchange="this.form.submit()">
 
                         <option value="terbaru"
-                            {{ request('filter')=='terbaru' ? 'selected' : '' }}>
+                            {{ request('filter') == 'terbaru' ? 'selected' : '' }}>
                             terbaru
                         </option>
 
                         <option value="terlama"
-                            {{ request('filter')=='terlama' ? 'selected' : '' }}>
+                            {{ request('filter') == 'terlama' ? 'selected' : '' }}>
                             terlama
                         </option>
 
                         <option value="aktif"
-                            {{ request('filter')=='aktif' ? 'selected' : '' }}>
+                            {{ request('filter') == 'aktif' ? 'selected' : '' }}>
                             aktif
                         </option>
 
                         <option value="tidak_aktif"
-                            {{ request('filter')=='tidak_aktif' ? 'selected' : '' }}>
+                            {{ request('filter') == 'tidak_aktif' ? 'selected' : '' }}>
                             tidak aktif
                         </option>
 
                         <option value="proses_izin"
-                            {{ request('filter')=='proses_izin' ? 'selected' : '' }}>
+                            {{ request('filter') == 'proses_izin' ? 'selected' : '' }}>
                             proses izin
                         </option>
 
@@ -114,7 +130,10 @@
             <!-- FILTER CABANG -->
             <div class="cabang-filter d-flex flex-nowrap mb-4">
 
-                <a href="{{ route('aum.sekolah') }}"
+                <a href="{{ route('aum.sekolah',[
+                        'filter'=>request('filter'),
+                        'search'=>request('search')
+                    ]) }}"
                    class="cabang-filter-btn {{ request('cabang') == null ? 'active' : '' }}">
 
                     Semua
@@ -129,8 +148,7 @@
                             'filter'=>request('filter'),
                             'search'=>request('search')
                         ]) }}"
-                        class="cabang-filter-btn
-                        {{ request('cabang')==$cabang->id ? 'active' : '' }}">
+                        class="cabang-filter-btn {{ request('cabang')==$cabang->id ? 'active' : '' }}">
 
                         {{ $cabang->nama_cabang }}
 
@@ -151,14 +169,13 @@
                         'filter'=>request('filter'),
                         'search'=>request('search')
                     ]) }}"
-                    class="filter-ranting-line
-                    {{ request('ranting') == null ? 'active' : '' }}">
+                    class="filter-ranting-line {{ request('ranting') == null ? 'active' : '' }}">
 
                     Semua
 
                 </a>
 
-                @foreach($rantings as $ranting)
+                @foreach($rantings->where('cabang_id', request('cabang')) as $ranting)
 
                     <a
                         href="{{ route('aum.sekolah',[
@@ -167,8 +184,7 @@
                             'filter'=>request('filter'),
                             'search'=>request('search')
                         ]) }}"
-                        class="filter-ranting-line
-                        {{ request('ranting')==$ranting->id ? 'active' : '' }}">
+                        class="filter-ranting-line {{ request('ranting')==$ranting->id ? 'active' : '' }}">
 
                         {{ $ranting->nama_ranting }}
 
@@ -194,6 +210,16 @@
                     type="hidden"
                     name="filter"
                     value="{{ request('filter') }}">
+
+                <input
+                    type="hidden"
+                    name="cabang"
+                    value="{{ request('cabang') }}">
+
+                <input
+                    type="hidden"
+                    name="ranting"
+                    value="{{ request('ranting') }}">
 
                 <span class="search-label">
 
@@ -244,129 +270,133 @@
 
         </thead>
 
-        <tbody>
+            <tbody>
 
-            @forelse($aums as $aum)
+                @forelse($aums as $aum)
 
-            <tr>
+                <tr>
 
-                <td>
+                    <td>
 
-                    {{ $aum->nama_aum }}
+                        {{ $aum->nama_aum }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ $aum->jumlah_siswa ?? '-' }}
+                        {{ optional($aum->sekolah)->jumlah_siswa ?? '-' }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ $aum->jumlah_guru ?? '-' }}
+                        {{ optional($aum->sekolah)->jumlah_guru ?? '-' }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ $aum->akreditasi ?? '-' }}
+                        {{ optional($aum->sekolah)->akreditasi ?? '-' }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ $aum->tahun ?? '-' }}
+                        {{ $aum->tahun ?? '-' }}
 
-                </td>
+                    </td>
 
-                <td>
+                    <td>
 
-                    {{ $aum->alamat }}
+                        {{ $aum->alamat }}
 
-                </td>
+                    </td>
 
                     <td>
 
                         @if($aum->status_perizinan == 'aktif')
 
                             <span class="status-badge status-active">
+
                                 AKTIF
+
                             </span>
 
                         @elseif($aum->status_perizinan == 'tidak aktif')
 
                             <span class="status-badge status-nonaktif">
+
                                 TIDAK AKTIF
+
                             </span>
 
                         @else
 
                             <span class="status-badge status-kurang">
+
                                 PROSES IZIN
+
                             </span>
 
                         @endif
 
                     </td>
 
-                </td>
+                    <td>
 
-                <td>
+                        <div class="d-flex justify-content-center gap-2">
 
-                    <div class="d-flex justify-content-center gap-2">
+                            <!-- DETAIL -->
+                            <button
+                                class="action-btn btn-detail"
+                                data-bs-toggle="modal"
+                                data-bs-target="#detailModal{{ $aum->id }}">
 
-                        <!-- DETAIL -->
-                        <button
-                            class="action-btn btn-detail"
-                            data-bs-toggle="modal"
-                            data-bs-target="#detailModal{{ $aum->id }}">
+                                <iconify-icon icon="mdi:eye"></iconify-icon>
 
-                            <iconify-icon icon="mdi:eye"></iconify-icon>
+                            </button>
 
-                        </button>
+                            <!-- EDIT -->
+                            <button
+                                class="action-btn btn-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $aum->id }}">
 
-                        <!-- EDIT -->
-                        <button
-                            class="action-btn btn-edit"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editModal{{ $aum->id }}">
+                                <iconify-icon icon="mdi:pencil"></iconify-icon>
 
-                            <iconify-icon icon="mdi:pencil"></iconify-icon>
+                            </button>
 
-                        </button>
+                            <!-- DELETE -->
+                            <button
+                                class="action-btn btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $aum->id }}">
 
-                        <!-- DELETE -->
-                        <button
-                            class="action-btn btn-delete"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteModal{{ $aum->id }}">
+                                <iconify-icon icon="mdi:trash-can"></iconify-icon>
 
-                            <iconify-icon icon="mdi:trash-can"></iconify-icon>
+                            </button>
 
-                        </button>
+                        </div>
 
-                    </div>
+                    </td>
 
-                </td>
+                </tr>
 
-            </tr>
+                @empty
 
-            @empty
+                <tr>
 
-            <tr>
+                    <td colspan="8" class="text-center py-4">
 
-                <td colspan="8" class="text-center py-4">
+                        Tidak ada data sekolah
 
-                    Tidak ada data sekolah
+                    </td>
 
-                </td>
+                </tr>
 
-            </tr>
+                @endforelse
 
-            @endforelse
-
-        </tbody>
+            </tbody>
 
     </table>
 

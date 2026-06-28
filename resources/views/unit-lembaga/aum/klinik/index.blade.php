@@ -17,8 +17,25 @@
 
                 <form method="GET" class="d-flex align-items-center gap-2">
 
+                    <input
+                        type="hidden"
+                        name="cabang"
+                        value="{{ request('cabang') }}">
+
+                    <input
+                        type="hidden"
+                        name="ranting"
+                        value="{{ request('ranting') }}">
+
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ request('search') }}">
+
                     <label class="filter-label m-0">
+
                         Urut berdasarkan
+
                     </label>
 
                     <select
@@ -27,27 +44,27 @@
                         onchange="this.form.submit()">
 
                         <option value="terbaru"
-                            {{ request('filter')=='terbaru' ? 'selected' : '' }}>
+                            {{ request('filter') == 'terbaru' ? 'selected' : '' }}>
                             terbaru
                         </option>
 
                         <option value="terlama"
-                            {{ request('filter')=='terlama' ? 'selected' : '' }}>
+                            {{ request('filter') == 'terlama' ? 'selected' : '' }}>
                             terlama
                         </option>
 
                         <option value="aktif"
-                            {{ request('filter')=='aktif' ? 'selected' : '' }}>
+                            {{ request('filter') == 'aktif' ? 'selected' : '' }}>
                             aktif
                         </option>
 
                         <option value="tidak_aktif"
-                            {{ request('filter')=='tidak_aktif' ? 'selected' : '' }}>
+                            {{ request('filter') == 'tidak_aktif' ? 'selected' : '' }}>
                             tidak aktif
                         </option>
 
                         <option value="proses_izin"
-                            {{ request('filter')=='proses_izin' ? 'selected' : '' }}>
+                            {{ request('filter') == 'proses_izin' ? 'selected' : '' }}>
                             proses izin
                         </option>
 
@@ -114,7 +131,10 @@
             <!-- FILTER CABANG -->
             <div class="cabang-filter d-flex flex-nowrap mb-4">
 
-                <a href="{{ route('aum.klinik') }}"
+                <a href="{{ route('aum.klinik',[
+                        'filter'=>request('filter'),
+                        'search'=>request('search')
+                    ]) }}"
                    class="cabang-filter-btn {{ request('cabang') == null ? 'active' : '' }}">
 
                     Semua
@@ -129,8 +149,7 @@
                             'filter'=>request('filter'),
                             'search'=>request('search')
                         ]) }}"
-                        class="cabang-filter-btn
-                        {{ request('cabang')==$cabang->id ? 'active' : '' }}">
+                        class="cabang-filter-btn {{ request('cabang')==$cabang->id ? 'active' : '' }}">
 
                         {{ $cabang->nama_cabang }}
 
@@ -151,14 +170,13 @@
                         'filter'=>request('filter'),
                         'search'=>request('search')
                     ]) }}"
-                    class="filter-ranting-line
-                    {{ request('ranting') == null ? 'active' : '' }}">
+                    class="filter-ranting-line {{ request('ranting') == null ? 'active' : '' }}">
 
                     Semua
 
                 </a>
 
-                @foreach($rantings as $ranting)
+                @foreach($rantings->where('cabang_id', request('cabang')) as $ranting)
 
                     <a
                         href="{{ route('aum.klinik',[
@@ -167,8 +185,7 @@
                             'filter'=>request('filter'),
                             'search'=>request('search')
                         ]) }}"
-                        class="filter-ranting-line
-                        {{ request('ranting')==$ranting->id ? 'active' : '' }}">
+                        class="filter-ranting-line {{ request('ranting')==$ranting->id ? 'active' : '' }}">
 
                         {{ $ranting->nama_ranting }}
 
@@ -195,6 +212,16 @@
                     name="filter"
                     value="{{ request('filter') }}">
 
+                <input
+                    type="hidden"
+                    name="cabang"
+                    value="{{ request('cabang') }}">
+
+                <input
+                    type="hidden"
+                    name="ranting"
+                    value="{{ request('ranting') }}">
+
                 <span class="search-label">
 
                     Cari data :
@@ -216,149 +243,167 @@
     </div>
 
     <!-- TABLE -->
-<!-- TABLE -->
-<div class="table-wrapper">
+    <div class="table-wrapper">
 
-    <table class="table custom-table align-middle">
+        <table class="table custom-table align-middle">
 
-        <thead>
+            <thead>
 
-            <tr>
+                <tr>
 
-                <th style="width: 23%">NAMA AUM</th>
-                <th class="text-center">JML. PASIEN</th>
-                <th class="text-center">JML. DOKTER</th>
-                <th class="text-center">KAPASITAS</th>
-                <th class="text-center">TAHUN</th>
-                <th style="width:18%">ALAMAT</th>
-                <th class="text-center">STATUS IZIN</th>
-                <th class="text-center" style="width:120px">OPSI</th>
+                    <th style="width: 23%">NAMA AUM</th>
+                    <th class="text-center">JML. PASIEN</th>
+                    <th class="text-center">JML. DOKTER</th>
+                    <th class="text-center">KAPASITAS</th>
+                    <th class="text-center">TAHUN</th>
+                    <th style="width:18%">ALAMAT</th>
+                    <th class="text-center">STATUS IZIN</th>
+                    <th class="text-center" style="width:120px">OPSI</th>
 
-            </tr>
+                </tr>
 
-        </thead>
+            </thead>
 
-        <tbody>
+            <tbody>
 
-            @forelse($aums as $aum)
+                @forelse($aums as $aum)
 
-            <tr>
+                <tr>
 
-                <td>
-                    <div class="fw-semibold">
-                    {{ $aum->nama_aum }}
-                    </div>
-                </td>
+                    <td>
 
-                <td class="text-center">
-                    {{ number_format($aum->jumlah_pasien) }}
-                </td>
+                        <div class="fw-semibold">
 
-                <td class="text-center">
-                    {{ $aum->jumlah_dokter }}
-                </td>
+                            {{ $aum->nama_aum }}
 
-                <td class="text-center">
-                    {{ $aum->kapasitas }}
-                </td>
+                        </div>
 
-                <td class="text-center">
-                    {{ $aum->tahun }}
-                </td>
+                    </td>
 
-                <td>
-                    {{ $aum->alamat }}
-                </td>
+                    <td class="text-center">
 
-                <td class="text-center">
+                        {{ number_format(optional($aum->klinik)->jumlah_pasien ?? 0) }}
 
-                    @switch($aum->status_perizinan)
+                    </td>
 
-                        @case('aktif')
+                    <td class="text-center">
 
-                            <span class="status-badge status-active">
-                                AKTIF
-                            </span>
+                        {{ optional($aum->klinik)->jumlah_dokter ?? '-' }}
 
-                            @break
+                    </td>
 
-                        @case('tidak aktif')
+                    <td class="text-center">
 
-                            <span class="status-badge status-nonaktif">
-                                TIDAK AKTIF
-                            </span>
+                        {{ optional($aum->klinik)->kapasitas ?? '-' }}
 
-                            @break
+                    </td>
 
-                        @default
+                    <td class="text-center">
 
-                            <span class="status-badge status-kurang">
-                                PROSES IZIN
-                            </span>
+                        {{ $aum->tahun ?? '-' }}
 
-                    @endswitch
+                    </td>
 
-                </td>
+                    <td>
 
-                <td>
+                        {{ $aum->alamat }}
 
-                    <div class="d-flex justify-content-center gap-2">
+                    </td>
 
-                        <!-- DETAIL -->
-                        <button
-                            class="action-btn btn-detail"
-                            data-bs-toggle="modal"
-                            data-bs-target="#detailModal{{ $aum->id }}">
+                    <td class="text-center">
 
-                            <iconify-icon icon="mdi:eye"></iconify-icon>
+                        @switch($aum->status_perizinan)
 
-                        </button>
+                            @case('aktif')
 
-                        <!-- EDIT -->
-                        <button
-                            class="action-btn btn-edit"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editModal{{ $aum->id }}">
+                                <span class="status-badge status-active">
 
-                            <iconify-icon icon="mdi:pencil"></iconify-icon>
+                                    AKTIF
 
-                        </button>
+                                </span>
 
-                        <!-- DELETE -->
-                        <button
-                            class="action-btn btn-delete"
-                            data-bs-toggle="modal"
-                            data-bs-target="#deleteModal{{ $aum->id }}">
+                                @break
 
-                            <iconify-icon icon="mdi:trash-can"></iconify-icon>
+                            @case('tidak aktif')
 
-                        </button>
+                                <span class="status-badge status-nonaktif">
 
-                    </div>
+                                    TIDAK AKTIF
 
-                </td>
+                                </span>
 
-            </tr>
+                                @break
 
-            @empty
+                            @default
 
-            <tr>
+                                <span class="status-badge status-kurang">
 
-                <td colspan="8" class="text-center py-5 text-muted">
+                                    PROSES IZIN
 
-                    Belum ada data klinik.
+                                </span>
 
-                </td>
+                        @endswitch
 
-            </tr>
+                    </td>
 
-            @endforelse
+                    <td>
 
-        </tbody>
+                        <div class="d-flex justify-content-center gap-2">
 
-    </table>
+                            <!-- DETAIL -->
+                            <button
+                                class="action-btn btn-detail"
+                                data-bs-toggle="modal"
+                                data-bs-target="#detailModal{{ $aum->id }}">
 
-</div>
+                                <iconify-icon icon="mdi:eye"></iconify-icon>
+
+                            </button>
+
+                            <!-- EDIT -->
+                            <button
+                                class="action-btn btn-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $aum->id }}">
+
+                                <iconify-icon icon="mdi:pencil"></iconify-icon>
+
+                            </button>
+
+                            <!-- DELETE -->
+                            <button
+                                class="action-btn btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $aum->id }}">
+
+                                <iconify-icon icon="mdi:trash-can"></iconify-icon>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                @empty
+
+                <tr>
+
+                    <td colspan="8" class="text-center py-5 text-muted">
+
+                        Belum ada data klinik.
+
+                    </td>
+
+                </tr>
+
+                @endforelse
+
+            </tbody>
+        </table>
+
+    </div>
 
     <!-- PAGINATION -->
     <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">

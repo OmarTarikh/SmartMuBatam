@@ -16,16 +16,16 @@ class Aum extends Model
         'cabang_id',
         'ranting_id',
         'alamat',
-        'jumlah_siswa',
-        'jumlah_guru',
-        'akreditasi',
         'tahun',
-        'jumlah_pasien',
-        'jumlah_dokter',
-        'kapasitas',
         'status_perizinan',
         'bulan'
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relasi Master
+    |--------------------------------------------------------------------------
+    */
 
     public function cabang()
     {
@@ -35,5 +35,21 @@ class Aum extends Model
     public function ranting()
     {
         return $this->belongsTo(Ranting::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relasi Detail
+    |--------------------------------------------------------------------------
+    */
+
+    public function sekolah()
+    {
+        return $this->hasOne(AumSekolah::class, 'aum_id');
+    }
+
+    public function klinik()
+    {
+        return $this->hasOne(AumKlinik::class, 'aum_id');
     }
 }

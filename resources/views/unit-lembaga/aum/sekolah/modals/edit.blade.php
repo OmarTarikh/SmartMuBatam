@@ -126,7 +126,7 @@
                         <input
                             type="number"
                             name="jumlah_siswa"
-                            value="{{ $aum->jumlah_siswa }}"
+                            value="{{ optional($aum->sekolah)->jumlah_siswa }}"
                             class="form-control custom-input">
 
                     </div>
@@ -143,7 +143,7 @@
                         <input
                             type="number"
                             name="jumlah_guru"
-                            value="{{ $aum->jumlah_guru }}"
+                            value="{{ optional($aum->sekolah)->jumlah_guru }}"
                             class="form-control custom-input">
 
                     </div>
@@ -163,28 +163,22 @@
 
                             <option
                                 value="A"
-                                {{ $aum->akreditasi=='A'?'selected':'' }}>
-
+                                {{ optional($aum->sekolah)->akreditasi == 'A' ? 'selected' : '' }}>
                                 A
-
                             </option>
 
                             <option
                                 value="B"
-                                {{ $aum->akreditasi=='B'?'selected':'' }}>
-
+                                {{ optional($aum->sekolah)->akreditasi == 'B' ? 'selected' : '' }}>
                                 B
-
                             </option>
 
                             <option
                                 value="C"
-                                {{ $aum->akreditasi=='C'?'selected':'' }}>
-
+                                {{ optional($aum->sekolah)->akreditasi == 'C' ? 'selected' : '' }}>
                                 C
-
-                            </option>
-
+                            </option>                        
+                            
                         </select>
 
                     </div>
