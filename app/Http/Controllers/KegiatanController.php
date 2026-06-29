@@ -154,6 +154,8 @@ public function store(Request $request)
 
     $request->validate([
 
+        'cabang_id'       => 'required|exists:cabang,id',
+
         'nama_kegiatan'   => 'required|max:255',
 
         'jenis'           => 'required|in:agenda,program_kerja',
@@ -171,8 +173,9 @@ public function store(Request $request)
         'lokasi'          => 'required|max:255',
 
     ]);
-
     Kegiatan::create([
+
+        'cabang_id'       => $request->cabang_id,
 
         'nama_kegiatan'   => $request->nama_kegiatan,
 
@@ -191,7 +194,6 @@ public function store(Request $request)
         'lokasi'          => $request->lokasi,
 
     ]);
-
     return redirect()
 
         ->route('kegiatan')
@@ -219,6 +221,8 @@ public function update(Request $request, $id)
 
         'nama_kegiatan'   => 'required|max:255',
 
+        'cabang_id' => 'required|exists:cabang,id',
+
         'jenis'           => 'required|in:agenda,program_kerja',
 
         'deskripsi'       => 'required',
@@ -240,6 +244,8 @@ public function update(Request $request, $id)
     $kegiatan->update([
 
         'nama_kegiatan'   => $request->nama_kegiatan,
+
+        'cabang_id' => $request->cabang_id,
 
         'jenis'           => $request->jenis,
 
