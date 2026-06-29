@@ -12,6 +12,11 @@ return new class extends Migration
 
             $table->id();
 
+            $table->foreignId('cabang_id')
+                ->constrained('cabang')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+                
             $table->string('nama_kegiatan',150);
 
             $table->enum('jenis',[

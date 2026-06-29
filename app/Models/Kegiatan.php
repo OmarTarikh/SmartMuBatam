@@ -11,6 +11,7 @@ class Kegiatan extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'cabang_id',
         'nama_kegiatan',
         'jenis',
         'deskripsi',
@@ -20,4 +21,9 @@ class Kegiatan extends Model
         'tanggal_selesai',
         'lokasi'
     ];
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class);
+    }
 }

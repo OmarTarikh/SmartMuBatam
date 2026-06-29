@@ -3,114 +3,242 @@
 
 @section('content')
 
+
 <div class="container-fluid py-4">
 
-    <!-- TOP -->
-    <div class="d-flex justify-content-between align-items-start flex-wrap gap-4 mb-4">
+    <!-- FILTER & ACTION -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4 mb-4">
 
         <!-- LEFT -->
-        <div>
+        <div class="d-flex flex-column gap-3">
 
-            <!-- SORT -->
-            <div class="d-flex align-items-center gap-3 mb-3">
+            <!-- FILTER -->
+            <div class="d-flex align-items-center gap-2">
 
-                <label class="filter-label">
-                    Urut berdasarkan
-                </label>
+                <form
+                    method="GET"
+                    class="d-flex align-items-center gap-2">
 
-                <select class="form-select custom-select">
+                    <input
+                        type="hidden"
+                        name="jenis"
+                        value="{{ request('jenis') }}">
 
-                    <option>terbaru</option>
-                    <option>terlama</option>
+                    <input
+                        type="hidden"
+                        name="cabang"
+                        value="{{ request('cabang') }}">
 
-                </select>
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ request('search') }}">
 
-            </div>
+                    <label class="filter-label m-0">
 
-            <!-- FILTER CABANG -->
-            <div class="d-flex flex-wrap align-items-center cabang-filter mb-3">
+                        Urut berdasarkan
 
-                <button class="cabang-filter-btn active">
-                    Batam Kota
-                </button>
+                    </label>
 
-                <button class="cabang-filter-btn">
-                    Sekupang
-                </button>
+                    <select
+                        name="filter"
+                        class="form-select custom-select"
+                        onchange="this.form.submit()">
 
-                <button class="cabang-filter-btn">
-                    Batu Aji
-                </button>
+                        <option
+                            value="terbaru"
+                            {{ request('filter')=='terbaru' || request('filter')==null ? 'selected' : '' }}>
 
-                <button class="cabang-filter-btn">
-                    Nongsa
-                </button>
+                            Terbaru
 
-                <button class="cabang-filter-btn">
-                    Sagulung
-                </button>
+                        </option>
 
-            </div>
+                        <option
+                            value="terlama"
+                            {{ request('filter')=='terlama' ? 'selected' : '' }}>
 
-            <!-- FILTER RANTING -->
-            <div class="d-flex flex-wrap align-items-center gap-4">
+                            Terlama
 
-                <button class="filter-ranting-line active">
-                    Tanjung Riau
-                </button>
+                        </option>
 
-                <button class="filter-ranting-line">
-                    Tiban
-                </button>
+                    </select>
 
-                <button class="filter-ranting-line">
-                    Patam Lestari
-                </button>
+                </form>
 
             </div>
 
         </div>
 
         <!-- RIGHT -->
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+
+            <!-- ADD -->
+            <a
+                href="{{ route('kegiatan.tambah') }}"
+                class="btn custom-btn-add d-flex align-items-center gap-2">
+
+                <iconify-icon
+                    icon="mdi:plus"
+                    width="20">
+                </iconify-icon>
+
+                <span>
+
+                    TAMBAH DATA
+
+                </span>
+
+            </a>
+
+            <!-- PDF -->
+            <a
+                href="{{ route('kegiatan.pdf', request()->query()) }}"
+                target="_blank"
+                class="btn custom-btn-pdf d-flex align-items-center gap-2">
+
+                <iconify-icon
+                    icon="mdi:file-pdf-box"
+                    width="18">
+                </iconify-icon>
+
+                <span>
+
+                    CETAK PDF
+
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- FILTER JENIS + CABANG + SEARCH -->
+    <div class="d-flex align-items-start justify-content-between gap-4 mb-3">
+
         <div>
 
-            <!-- BUTTON -->
-            <div class="d-flex justify-content-end gap-2 mb-3">
+            <!-- FILTER JENIS -->
+            <div class="aum-filter d-flex flex-nowrap mb-4">
 
-                <a href="{{ url('/kegiatan/tambah') }}"
-                   class="btn custom-btn-add">
+                <a
+                    href="{{ route('kegiatan',[
+                        'filter'=>request('filter'),
+                        'cabang'=>request('cabang'),
+                        'search'=>request('search')
+                    ]) }}"
+                    class="aum-filter-btn {{ request('jenis') == null ? 'active' : '' }}">
 
-                    <iconify-icon icon="mdi:plus"></iconify-icon>
-
-                    Tambah Data
+                    Semua
 
                 </a>
 
-                <button class="btn custom-btn-pdf">
+                <a
+                    href="{{ route('kegiatan',[
+                        'jenis'=>'agenda',
+                        'filter'=>request('filter'),
+                        'cabang'=>request('cabang'),
+                        'search'=>request('search')
+                    ]) }}"
+                    class="aum-filter-btn {{ request('jenis')=='agenda' ? 'active' : '' }}">
 
-                    <iconify-icon icon="mdi:file-pdf-box"></iconify-icon>
+                    Agenda
 
-                    Cetak PDF
+                </a>
 
-                </button>
+                <a
+                    href="{{ route('kegiatan',[
+                        'jenis'=>'program_kerja',
+                        'filter'=>request('filter'),
+                        'cabang'=>request('cabang'),
+                        'search'=>request('search')
+                    ]) }}"
+                    class="aum-filter-btn {{ request('jenis')=='program_kerja' ? 'active' : '' }}">
+
+                    Program Kerja
+
+                </a>
 
             </div>
 
-            <!-- SEARCH -->
-            <div class="d-flex align-items-center gap-2 justify-content-end">
+            <!-- FILTER CABANG -->
+            <div class="cabang-filter d-flex flex-nowrap mb-4">
 
-                <label class="search-label">
-                    Cari data :
-                </label>
+                <a
+                    href="{{ route('kegiatan',[
+                        'jenis'=>request('jenis'),
+                        'filter'=>request('filter'),
+                        'search'=>request('search')
+                    ]) }}"
+                    class="cabang-filter-btn {{ request('cabang') == null ? 'active' : '' }}">
 
-                <input type="text"
-                       class="form-control custom-search">
+                    Semua
+
+                </a>
+
+                @foreach($cabangs as $cabang)
+
+                    <a
+                        href="{{ route('kegiatan',[
+                            'cabang'=>$cabang->id,
+                            'jenis'=>request('jenis'),
+                            'filter'=>request('filter'),
+                            'search'=>request('search')
+                        ]) }}"
+                        class="cabang-filter-btn {{ request('cabang')==$cabang->id ? 'active' : '' }}">
+
+                        {{ $cabang->nama_cabang }}
+
+                    </a>
+
+                @endforeach
 
             </div>
 
         </div>
 
-    </div>
+        <!-- SEARCH -->
+        <div class="d-flex justify-content-end mb-3">
+
+            <form
+                method="GET"
+                id="searchForm"
+                class="d-flex align-items-center gap-2">
+
+                <input
+                    type="hidden"
+                    name="filter"
+                    value="{{ request('filter') }}">
+
+                <input
+                    type="hidden"
+                    name="jenis"
+                    value="{{ request('jenis') }}">
+
+                <input
+                    type="hidden"
+                    name="cabang"
+                    value="{{ request('cabang') }}">
+
+                <span class="search-label">
+
+                    Cari data :
+
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    name="search"
+                    value="{{ request('search') }}"
+                    class="form-control custom-search"
+                    placeholder="Cari...">
+
+            </form>
+
+        </div>
+
+    </div>    
 
     <!-- TABLE -->
     <div class="table-wrapper">
@@ -121,16 +249,59 @@
 
                 <tr>
 
-                    <th>NO</th>
-                    <th>NAMA KEGIATAN</th>
-                    <th>JENIS</th>
-                    <th>DESKRIPSI</th>
-                    <th>TARGET</th>
-                    <th>PROGRES (%)</th>
-                    <th>TGL MULAI</th>
-                    <th>TGL SELESAI</th>
-                    <th>LOKASI</th>
-                    <th>OPSI</th>
+                    <th style="width:18%">
+
+                        NAMA KEGIATAN
+
+                    </th>
+
+                    <th style="width:14%">
+
+                        CABANG
+
+                    </th>
+
+                    <th class="text-center" style="width:10%">
+
+                        JENIS
+
+                    </th>
+
+                    <th style="width:18%">
+
+                        TARGET
+
+                    </th>
+
+                    <th class="text-center" style="width:8%">
+
+                        PROGRES
+
+                    </th>
+
+                    <th class="text-center" style="width:10%">
+
+                        MULAI
+
+                    </th>
+
+                    <th class="text-center" style="width:10%">
+
+                        SELESAI
+
+                    </th>
+
+                    <th style="width:12%">
+
+                        LOKASI
+
+                    </th>
+
+                    <th class="text-center" style="width:120px">
+
+                        OPSI
+
+                    </th>
 
                 </tr>
 
@@ -138,94 +309,146 @@
 
             <tbody>
 
-                @for ($i = 1; $i <= 10; $i++)
+                @forelse($kegiatans as $item)
 
                 <tr>
 
-                    <td>{{ $i }}</td>
-
+                    <!-- NAMA -->
                     <td>
-                        Pengajian Rutin
+
+                        <div class="fw-semibold">
+
+                            {{ $item->nama_kegiatan }}
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ Str::limit($item->deskripsi,100) }}
+
+                        </small>
+
                     </td>
 
+                    <!-- CABANG -->
                     <td>
 
-                        @if($i % 2 == 0)
+                        {{ $item->cabang->nama_cabang ?? '-' }}
 
-                            program kerja
+                    </td>
+
+                    <!-- JENIS -->
+                    <td class="text-center">
+
+                        @if($item->jenis == 'agenda')
+
+                            <span class="status-badge status-active">
+
+                                AGENDA
+
+                            </span>
 
                         @else
 
-                            agenda
+                            <span class="status-badge status-kurang">
+
+                                PROGRAM
+
+                            </span>
 
                         @endif
 
                     </td>
 
+                    <!-- TARGET -->
                     <td>
-                        Pengajian mingguan
+
+                        {{ $item->target }}
+
                     </td>
 
-                    <td>
-                        Selesai 2025
-                    </td>
+                    <!-- PROGRES -->
+                    <td class="text-center">
 
-                    <td>
+                        @if($item->progres_persen >= 100)
 
-                        @if($i % 3 == 0)
+                            <span class="status-badge status-active">
 
-                            100
+                                {{ $item->progres_persen }}%
 
-                        @elseif($i % 2 == 0)
+                            </span>
 
-                            60
+                        @elseif($item->progres_persen >= 50)
+
+                            <span class="status-badge status-kurang">
+
+                                {{ $item->progres_persen }}%
+
+                            </span>
 
                         @else
 
-                            30
+                            <span class="status-badge status-nonaktif">
+
+                                {{ $item->progres_persen }}%
+
+                            </span>
 
                         @endif
 
                     </td>
 
-                    <td>
-                        2025-01-01
+                    <!-- MULAI -->
+                    <td class="text-center">
+
+                        {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}
+
                     </td>
 
-                    <td>
-                        2025-12-31
+                    <!-- SELESAI -->
+                    <td class="text-center">
+
+                        {{ \Carbon\Carbon::parse($item->tanggal_selesai)->format('d-m-Y') }}
+
                     </td>
 
+                    <!-- LOKASI -->
                     <td>
-                        Masjid Al-Ikhlas
+
+                        {{ $item->lokasi }}
+
                     </td>
 
+                    <!-- OPSI -->
                     <td>
 
                         <div class="d-flex justify-content-center gap-2">
 
                             <!-- DETAIL -->
-                            <button class="btn action-btn btn-detail"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#detailModal">
+                            <button
+                                class="action-btn btn-detail"
+                                data-bs-toggle="modal"
+                                data-bs-target="#detailModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:eye"></iconify-icon>
 
                             </button>
 
                             <!-- EDIT -->
-                            <button class="btn action-btn btn-edit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                            <button
+                                class="action-btn btn-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:pencil"></iconify-icon>
 
                             </button>
 
                             <!-- DELETE -->
-                            <button class="btn action-btn btn-delete"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal">
+                            <button
+                                class="action-btn btn-delete"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $item->id }}">
 
                                 <iconify-icon icon="mdi:trash-can"></iconify-icon>
 
@@ -237,7 +460,19 @@
 
                 </tr>
 
-                @endfor
+                @empty
+
+                <tr>
+
+                    <td colspan="9" class="text-center py-5 text-muted">
+
+                        Belum ada data kegiatan.
+
+                    </td>
+
+                </tr>
+
+                @endforelse
 
             </tbody>
 
@@ -245,32 +480,125 @@
 
     </div>
 
-    <!-- FOOT -->
+    <!-- PAGINATION -->
     <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
 
+        <!-- INFO -->
         <div class="table-info-text">
-            Menunjukan 1 sampai 10 dari 10 entri
+
+            Menunjukan
+
+            {{ $kegiatans->firstItem() ?? 0 }}
+
+            sampai
+
+            {{ $kegiatans->lastItem() ?? 0 }}
+
+            dari
+
+            {{ $kegiatans->total() }}
+
+            entri
+
         </div>
 
-        <div class="custom-pagination">
+        <!-- PAGINATION -->
+        <div class="custom-pagination d-flex align-items-center">
 
-            <button class="page-btn page-prev">
-                Sebelumnya
-            </button>
+            {{-- Sebelumnya --}}
+            @if ($kegiatans->onFirstPage())
 
-            <button class="page-btn active">
-                1
-            </button>
+                <button class="page-btn page-prev" disabled>
 
-            <button class="page-btn page-next">
-                Berikutnya
-            </button>
+                    Sebelumnya
+
+                </button>
+
+            @else
+
+                <a
+                    href="{{ $kegiatans->previousPageUrl() }}"
+                    class="page-btn page-prev">
+
+                    Sebelumnya
+
+                </a>
+
+            @endif
+
+            @php
+
+                $start = max($kegiatans->currentPage() - 2, 1);
+
+                $end = min($start + 4, $kegiatans->lastPage());
+
+                if (($end - $start) < 4) {
+
+                    $start = max($end - 4, 1);
+
+                }
+
+            @endphp
+
+            @for($page = $start; $page <= $end; $page++)
+
+                <a
+                    href="{{ $kegiatans->url($page) }}"
+                    class="page-btn {{ $page == $kegiatans->currentPage() ? 'active' : '' }}">
+
+                    {{ $page }}
+
+                </a>
+
+            @endfor
+
+            {{-- Berikutnya --}}
+            @if($kegiatans->hasMorePages())
+
+                <a
+                    href="{{ $kegiatans->nextPageUrl() }}"
+                    class="page-btn page-next">
+
+                    Berikutnya
+
+                </a>
+
+            @else
+
+                <button class="page-btn page-next" disabled>
+
+                    Berikutnya
+
+                </button>
+
+            @endif
 
         </div>
 
     </div>
-
 </div>
+
+@push('scripts')
+
+<script>
+
+let timer;
+
+document.getElementById('searchInput').addEventListener('input', function () {
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+
+        document.getElementById('searchForm').submit();
+
+    }, 500);
+
+});
+
+</script>
+
+@endpush
 
 @include('kegiatan.modals.detail')
 @include('kegiatan.modals.edit')

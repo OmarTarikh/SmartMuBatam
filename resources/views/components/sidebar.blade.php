@@ -125,13 +125,20 @@
 
 
         {{-- PROGRAM KERJA DAN AGENDA --}}
+        @if(in_array(auth()->user()->role,['superadmin','cabang','ranting']))
         <li class="nav-item sidebar-divider-bottom">
-            <a href="{{ url('/kegiatan') }}" class="nav-link sidebar-link">
-                <iconify-icon icon="mdi:calendar"></iconify-icon>
-                <span>Program Kerja & Agenda</span>
-            </a>
-        </li>
 
+            <a href="{{ route('kegiatan') }}"
+            class="nav-link sidebar-link">
+
+                <iconify-icon icon="mdi:calendar"></iconify-icon>
+
+                <span>Program Kerja & Agenda</span>
+
+            </a>
+
+        </li>
+        @endif
     </ul>
 
 

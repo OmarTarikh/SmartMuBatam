@@ -8,6 +8,7 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\AumController;
 use App\Http\Controllers\MasjidController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\KegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,14 +53,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard.dashboard');
         })->name('dashboard');
-
-        Route::get('/kegiatan', function () {
-            return view('kegiatan.index');
-        });
-
-        Route::get('/kegiatan/tambah', function () {
-            return view('kegiatan.tambah');
-        });
 
     });
 
@@ -392,6 +385,40 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/get-masjid/{id}', [KeuanganController::class, 'getMasjid'])
             ->name('keuangan.getMasjid');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | KEGIATAN
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:superadmin,cabang,ranting')->group(function () {
+
+        // INDEX
+        Route::get('/kegiatan', [KegiatanController::class, 'index'])
+            ->name('kegiatan');
+
+        // TAMBAH
+        Route::get('/kegiatan/tambah', [KegiatanController::class, 'create'])
+            ->name('kegiatan.tambah');
+
+        // SIMPAN
+        Route::post('/kegiatan/store', [KegiatanController::class, 'store'])
+            ->name('kegiatan.store');
+
+        // UPDATE
+        Route::put('/kegiatan/{id}', [KegiatanController::class, 'update'])
+            ->name('kegiatan.update');
+
+        // DELETE
+        Route::delete('/kegiatan/{id}', [KegiatanController::class, 'destroy'])
+            ->name('kegiatan.destroy');
+
+        // PDF
+        Route::get('/kegiatan/pdf', [KegiatanController::class, 'pdf'])
+            ->name('kegiatan.pdf');
 
     });
 });

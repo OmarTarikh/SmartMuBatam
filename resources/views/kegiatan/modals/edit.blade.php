@@ -1,132 +1,256 @@
-<div class="modal fade" id="editModal" tabindex="-1">
+{{-- ========================================
+     resources/views/kegiatan/modals/edit.blade.php
+======================================== --}}
 
-    <div class="modal-dialog modal-dialog-centered">
+@foreach($kegiatans as $item)
+
+<div class="modal fade"
+     id="editModal{{ $item->id }}"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
 
         <div class="modal-content custom-modal">
 
+            <!-- HEADER -->
             <div class="modal-header custom-modal-header">
 
                 <h5 class="modal-title">
+
                     Edit Kegiatan
+
                 </h5>
 
-                <button type="button"
-                        class="btn-close shadow-none"
-                        data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn-close shadow-none"
+                    data-bs-dismiss="modal">
                 </button>
 
             </div>
 
-            <div class="modal-body">
+            <!-- BODY -->
+            <form
+                action="{{ route('kegiatan.update',$item->id) }}"
+                method="POST">
 
-                <div class="mb-3">
+                @csrf
+                @method('PUT')
 
-                    <label class="modal-label">
-                        Nama Kegiatan
-                    </label>
+                <div class="modal-body">
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Pengajian Rutin">
+                    <!-- NAMA KEGIATAN -->
+                    <div class="mb-3">
 
-                </div>
+                        <label class="modal-label">
 
-                <div class="mb-3">
+                            Nama Kegiatan
 
-                    <label class="modal-label">
-                        Jenis
-                    </label>
+                        </label>
 
-                    <select class="form-select custom-input">
+                        <input
+                            type="text"
+                            name="nama_kegiatan"
+                            value="{{ $item->nama_kegiatan }}"
+                            class="form-control custom-input">
 
-                        <option>agenda</option>
-                        <option>program_kerja</option>
+                    </div>
 
-                    </select>
+                    <!-- CABANG -->
+                    <div class="mb-3">
 
-                </div>
+                        <label class="modal-label">
 
-                <div class="mb-3">
+                            Cabang
 
-                    <label class="modal-label">
-                        Deskripsi
-                    </label>
+                        </label>
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Pengajian mingguan">
+                        <select
+                            name="cabang_id"
+                            class="form-select custom-input">
 
-                </div>
+                            @foreach($cabangs as $cabang)
 
-                <div class="mb-3">
+                                <option
+                                    value="{{ $cabang->id }}"
+                                    {{ $item->cabang_id == $cabang->id ? 'selected' : '' }}>
 
-                    <label class="modal-label">
-                        Target
-                    </label>
+                                    {{ $cabang->nama_cabang }}
 
-                    <input type="text"
-                           class="form-control custom-input"
-                           value="Selesai 2025">
+                                </option>
 
-                </div>
+                            @endforeach
 
-                <div class="mb-3">
+                        </select>
 
-                    <label class="modal-label">
-                        Progress Persen
-                    </label>
+                    </div>
 
-                    <input type="number"
-                           class="form-control custom-input"
-                           value="60">
+                    <!-- JENIS -->
+                    <div class="mb-3">
 
-                </div>
+                        <label class="modal-label">
 
-                <div class="mb-3">
+                            Jenis Kegiatan
 
-                    <label class="modal-label">
-                        Tanggal Mulai
-                    </label>
+                        </label>
 
-                    <input type="date"
-                           class="form-control custom-input"
-                           value="2025-01-01">
+                        <select
+                            name="jenis"
+                            class="form-select custom-input">
 
-                </div>
+                            <option
+                                value="agenda"
+                                {{ $item->jenis == 'agenda' ? 'selected' : '' }}>
 
-                <div class="mb-4">
+                                Agenda
 
-                    <label class="modal-label">
-                        Tanggal Selesai
-                    </label>
+                            </option>
 
-                    <input type="date"
-                           class="form-control custom-input"
-                           value="2025-12-31">
+                            <option
+                                value="program_kerja"
+                                {{ $item->jenis == 'program_kerja' ? 'selected' : '' }}>
 
-                </div>
+                                Program Kerja
 
-                <div class="d-flex justify-content-end gap-2">
+                            </option>
 
-                    <button class="btn modal-cancel-btn"
+                        </select>
+
+                    </div>
+
+                    <!-- PROGRESS -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Progress (%)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="progres_persen"
+                            min="0"
+                            max="100"
+                            value="{{ $item->progres_persen }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                                        <!-- TANGGAL MULAI -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Tanggal Mulai
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="tanggal_mulai"
+                            value="{{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('Y-m-d') }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- TANGGAL SELESAI -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Tanggal Selesai
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="tanggal_selesai"
+                            value="{{ \Carbon\Carbon::parse($item->tanggal_selesai)->format('Y-m-d') }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- TARGET -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Target
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="target"
+                            value="{{ $item->target }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- LOKASI -->
+                    <div class="mb-3">
+
+                        <label class="modal-label">
+
+                            Lokasi
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="lokasi"
+                            value="{{ $item->lokasi }}"
+                            class="form-control custom-input">
+
+                    </div>
+
+                    <!-- DESKRIPSI -->
+                    <div class="mb-4">
+
+                        <label class="modal-label">
+
+                            Deskripsi
+
+                        </label>
+
+                        <textarea
+                            name="deskripsi"
+                            rows="4"
+                            class="form-control custom-input">{{ $item->deskripsi }}</textarea>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <button
+                            type="button"
+                            class="btn modal-cancel-btn"
                             data-bs-dismiss="modal">
 
-                        Batal
+                            Batal
 
-                    </button>
+                        </button>
 
-                    <button class="btn modal-save-btn">
+                        <button
+                            type="submit"
+                            class="btn modal-save-btn">
 
-                        Simpan
+                            Simpan
 
-                    </button>
+                        </button>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </form>
 
         </div>
 
     </div>
 
 </div>
+
+@endforeach
